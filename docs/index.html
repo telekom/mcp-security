@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Security — Kai Kreuzer</title>
+    <!-- Slides © 2026 Kai Kreuzer, Deutsche Telekom IT GmbH — CC BY-SA 4.0 -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="css/inter.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Flash-prevention: apply saved theme + language before first paint -->
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme');
+            var l = localStorage.getItem('lang') || 'de';
+            if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.setAttribute('data-lang', l);
+        })();
+    </script>
+</head>
+<body>
+
+    <!-- Fixed Chrome -->
+    <div class="lang-toggle" role="group" aria-label="Language toggle">
+        <button class="lang-seg" data-lang="de">DE</button>
+        <button class="lang-seg" data-lang="en">EN</button>
+    </div>
+
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark / light mode">☽</button>
+
+    <button class="scroll-to-top" id="scroll-to-top" aria-label="Scroll to top"></button>
+
+    <nav class="progress-nav" id="progress-nav" aria-label="Slide navigation"></nav>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 01 — TITLE
+    ═══════════════════════════════════════════ -->
+    <section class="section section-hero" id="slide-title">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1"></div>
+            <div class="glow-orb glow-orb-2"></div>
+        </div>
+        <div class="section-label anim-fade-up" data-delay="0" id="conf-label"
+             style="position:absolute; top:36px; left:50%; transform:translateX(-50%); white-space:nowrap; z-index:1">
+            Deutsche Telekom IT GmbH
+        </div>
+        <div class="content content-center">
+            <h1 class="hero-title anim-fade-up" data-delay="0.1">
+                <span class="text-gradient">MCP Security</span>
+            </h1>
+            <p class="hero-subtitle anim-fade-up" data-delay="0.25">
+                <span class="lang-en">Deploying Model Context Protocol Safely in the Enterprise</span>
+                <span class="lang-de">Model Context Protocol sicher im Unternehmen einsetzen</span>
+            </p>
+        </div>
+        <div class="presenter-badge" id="presenter-badge">
+            <strong>Kai Kreuzer</strong> · Deutsche Telekom IT GmbH · kai.kreuzer@telekom.de
+        </div>
+        <div class="scroll-hint">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 02 — WHAT IS MCP?
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-what-is-mcp">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-2" style="opacity:0.08"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Context</span>
+                <span class="lang-de">Kontext</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">What is MCP?</span>
+                <span class="lang-de">Was ist MCP?</span>
+            </h2>
+            <p class="lead anim-fade-up" data-delay="0.16">
+                <span class="lang-en">An open standard by Anthropic (Nov 2024) for connecting AI agents to external tools and data sources via JSON-RPC 2.0.</span>
+                <span class="lang-de">Ein offener Standard von Anthropic (Nov. 2024) für die Verbindung von KI-Agenten mit externen Tools und Datenquellen über JSON-RPC 2.0.</span>
+            </p>
+
+            <!-- Architecture SVG -->
+            <svg class="arch-diagram anim-fade-up" data-delay="0.28" viewBox="0 0 960 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MCP architecture diagram">
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(226,0,116,0.7)"/>
+        </marker>
+    </defs>
+    <!-- Host box -->
+    <rect x="20" y="30" width="260" height="210" rx="14" fill="rgba(226,0,116,0.07)" stroke="rgba(226,0,116,0.3)" stroke-width="2"/>
+    <text x="150" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" fill="#f0f0f5">MCP Host</text>
+    <text x="150" y="128" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#8888a2">Claude Desktop</text>
+    <text x="150" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#8888a2">VS Code, Cursor,</text>
+    <text x="150" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#8888a2">AI Agent</text>
+    <!-- Client box -->
+    <rect x="350" y="30" width="260" height="210" rx="14" fill="rgba(0,153,216,0.07)" stroke="rgba(0,153,216,0.3)" stroke-width="2"/>
+    <text x="480" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" fill="#f0f0f5">MCP Client</text>
+    <text x="480" y="141" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#8888a2">JSON-RPC 2.0</text>
+    <text x="480" y="179" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#8888a2">stdio / HTTP+SSE</text>
+    <!-- Server box -->
+    <rect x="680" y="30" width="260" height="210" rx="14" fill="rgba(0,168,160,0.07)" stroke="rgba(0,168,160,0.3)" stroke-width="2"/>
+    <text x="810" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" fill="#f0f0f5">MCP Server</text>
+    <text x="810" y="128" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#00A8A0">🔧 Tools</text>
+    <text x="810" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#00A8A0">📦 Resources</text>
+    <text x="810" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#00A8A0">💬 Prompts</text>
+    <!-- Arrows -->
+    <line x1="282" y1="145" x2="348" y2="145" stroke="rgba(226,0,116,0.6)" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+    <line x1="612" y1="145" x2="678" y2="145" stroke="rgba(226,0,116,0.6)" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+</svg>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 03 — GROWING FAST
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-adoption">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1" style="opacity:0.1"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Adoption</span>
+                <span class="lang-de">Verbreitung</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">Growing Fast</span>
+                <span class="lang-de">Wächst schnell</span>
+            </h2>
+            <div class="stats-row" id="stats-row">
+                <div class="stat">
+                    <div class="stat-number" id="stat-servers">10,000+</div>
+                    <div class="stat-label">
+                        <span class="lang-en">Community MCP Servers</span>
+                        <span class="lang-de">Community-MCP-Server</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="stat-months">6</div>
+                    <div class="stat-label">
+                        <span class="lang-en">Months to ecosystem</span>
+                        <span class="lang-de">Monate bis zum Ökosystem</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="stat-standard">1</div>
+                    <div class="stat-label">
+                        <span class="lang-en">De-facto standard</span>
+                        <span class="lang-de">De-facto-Standard</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 04 — SECURITY WAS AN AFTERTHOUGHT
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-security-gap">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">The Problem</span>
+                <span class="lang-de">Das Problem</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">Security Was an Afterthought</span>
+                <span class="lang-de">Sicherheit war ein Nachgedanke</span>
+            </h2>
+
+            <div class="timeline anim-fade-up" data-delay="0.18" style="width:min(1600px, 90vw)">
+                <div style="height:58px; position:relative; margin-bottom:8px;">
+                    <div class="timeline-line">
+                        <div class="timeline-progress"></div>
+                    </div>
+                    <div class="timeline-items" style="padding-top:27px">
+                        <div class="timeline-item active">
+                            <div class="timeline-dot"></div>
+                        </div>
+                        <div class="timeline-item active">
+                            <div class="timeline-dot"></div>
+                        </div>
+                        <div class="timeline-item active">
+                            <div class="timeline-dot"></div>
+                        </div>
+                        <div class="timeline-item highlight">
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-items" style="margin-top:16px">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Nov 2024</div>
+                        <div class="timeline-text">
+                            <span class="lang-en">MCP spec released</span>
+                            <span class="lang-de">MCP-Spezifikation veröffentlicht</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Jan 2025</div>
+                        <div class="timeline-text">
+                            <span class="lang-en">Claude Desktop & major IDE integration</span>
+                            <span class="lang-de">Claude Desktop & IDE-Integration</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Mar 2025</div>
+                        <div class="timeline-text">
+                            <span class="lang-en">Ecosystem boom: thousands of servers</span>
+                            <span class="lang-de">Ökosystem-Boom: Tausende von Servern</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Mar 2025</div>
+                        <div class="timeline-text">
+                            <span class="lang-en">OAuth 2.1 added to spec</span>
+                            <span class="lang-de">OAuth 2.1 zur Spec hinzugefügt</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="timeline-annotation anim-fade-up" data-delay="0.3" style="font-size:1.8rem; color:var(--text-secondary); margin-top:48px; max-width:900px">
+                <span class="lang-en">Security was bolted on <strong>after</strong> the ecosystem already existed.</span>
+                <span class="lang-de">Sicherheit wurde <strong>nachträglich</strong> aufgesetzt, als das Ökosystem schon existierte.</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 05 — PROTOCOL: INITIALIZATION
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-protocol-init">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-3" style="opacity:0.07"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Protocol Internals · 1 of 3</span>
+                <span class="lang-de">Protokoll von innen · 1 von 3</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">How MCP Connects</span>
+                <span class="lang-de">Wie MCP sich verbindet</span>
+            </h2>
+
+            <svg class="seq-diagram anim-fade-up" data-delay="0.18" viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="arr" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(226,0,116,0.8)"/>
+        </marker>
+        <marker id="arr-b" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(0,168,160,0.8)"/>
+        </marker>
+    </defs>
+    <!-- Actors -->
+    <g class="seq-group">
+        <rect x="20" y="10" width="180" height="50" rx="10" fill="rgba(226,0,116,0.1)" stroke="rgba(226,0,116,0.35)" stroke-width="2"/>
+        <text x="110" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">LLM App</text>
+        <line x1="110" y1="60" x2="110" y2="350" stroke="rgba(226,0,116,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <g class="seq-group">
+        <rect x="290" y="10" width="180" height="50" rx="10" fill="rgba(0,153,216,0.1)" stroke="rgba(0,153,216,0.35)" stroke-width="2"/>
+        <text x="380" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">MCP Client</text>
+        <line x1="380" y1="60" x2="380" y2="350" stroke="rgba(0,153,216,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <g class="seq-group">
+        <rect x="560" y="10" width="180" height="50" rx="10" fill="rgba(0,168,160,0.1)" stroke="rgba(0,168,160,0.35)" stroke-width="2"/>
+        <text x="650" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">MCP Server</text>
+        <line x1="650" y1="60" x2="650" y2="350" stroke="rgba(0,168,160,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <!-- initialize → -->
+    <g class="seq-group">
+        <line x1="382" y1="115" x2="648" y2="115" stroke="rgba(226,0,116,0.7)" stroke-width="2.5" marker-end="url(#arr)"/>
+        <text x="516" y="105" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="600" fill="#f0f0f5">initialize</text>
+    </g>
+    <!-- ← initialize response -->
+    <g class="seq-group">
+        <line x1="648" y1="185" x2="382" y2="185" stroke="rgba(0,168,160,0.7)" stroke-width="2.5" marker-end="url(#arr-b)"/>
+        <text x="516" y="175" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="600" fill="#f0f0f5">
+            <tspan class="lang-en">initialize response</tspan>
+            <tspan class="lang-de">initialize-Antwort</tspan>
+        </text>
+    </g>
+    <!-- initialized → -->
+    <g class="seq-group">
+        <line x1="382" y1="255" x2="648" y2="255" stroke="rgba(226,0,116,0.7)" stroke-width="2.5" marker-end="url(#arr)"/>
+        <text x="516" y="245" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="600" fill="#f0f0f5">initialized</text>
+    </g>
+</svg>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 06 — PROTOCOL: TOOL DISCOVERY
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-protocol-tools">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Protocol Internals · 2 of 3</span>
+                <span class="lang-de">Protokoll von innen · 2 von 3</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">How MCP Exposes Tools</span>
+                <span class="lang-de">Wie MCP Tools bereitstellt</span>
+            </h2>
+
+            <svg class="seq-diagram anim-fade-up" data-delay="0.18" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="arr2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(226,0,116,0.8)"/>
+        </marker>
+        <marker id="arr2-b" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(0,168,160,0.8)"/>
+        </marker>
+    </defs>
+    <!-- Actors -->
+    <g class="seq-group">
+        <rect x="20" y="10" width="180" height="50" rx="10" fill="rgba(226,0,116,0.1)" stroke="rgba(226,0,116,0.35)" stroke-width="2"/>
+        <text x="110" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">LLM App</text>
+        <line x1="110" y1="60" x2="110" y2="370" stroke="rgba(226,0,116,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <g class="seq-group">
+        <rect x="290" y="10" width="180" height="50" rx="10" fill="rgba(0,153,216,0.1)" stroke="rgba(0,153,216,0.35)" stroke-width="2"/>
+        <text x="380" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">MCP Client</text>
+        <line x1="380" y1="60" x2="380" y2="370" stroke="rgba(0,153,216,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <g class="seq-group">
+        <rect x="560" y="10" width="180" height="50" rx="10" fill="rgba(0,168,160,0.1)" stroke="rgba(0,168,160,0.35)" stroke-width="2"/>
+        <text x="650" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">MCP Server</text>
+        <line x1="650" y1="60" x2="650" y2="370" stroke="rgba(0,168,160,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <!-- tools/list → -->
+    <g class="seq-group">
+        <line x1="382" y1="115" x2="648" y2="115" stroke="rgba(226,0,116,0.7)" stroke-width="2.5" marker-end="url(#arr2)"/>
+        <text x="516" y="105" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="600" fill="#f0f0f5">tools/list</text>
+    </g>
+    <!-- ← tool objects -->
+    <g class="seq-group">
+        <line x1="648" y1="185" x2="382" y2="185" stroke="rgba(0,168,160,0.7)" stroke-width="2.5" marker-end="url(#arr2-b)"/>
+        <text x="516" y="175" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="600" fill="#f0f0f5">
+            <tspan class="lang-en">tool objects array</tspan>
+            <tspan class="lang-de">Tool-Objekte Array</tspan>
+        </text>
+    </g>
+    <!-- Tool object detail box -->
+    <g class="seq-group">
+        <rect x="50" y="210" width="380" height="110" rx="10" fill="rgba(10,10,20,0.7)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <text x="75" y="238" font-family="monospace" font-size="19" fill="#88aaff">name:        </text><text x="165" y="238" font-family="monospace" font-size="19" fill="#98c47a">"get_employee_data"</text>
+        <text x="75" y="263" font-family="monospace" font-size="19" fill="#88aaff">description: </text><text x="230" y="263" font-family="monospace" font-size="19" fill="#c8c8e0">"…any text…"</text>
+        <text x="75" y="288" font-family="monospace" font-size="19" fill="#88aaff">inputSchema: </text><text x="240" y="288" font-family="monospace" font-size="19" fill="#c8c8e0">{ … }</text>
+    </g>
+</svg>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 07 — PROTOCOL: TOOL CALL
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-protocol-call">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1" style="opacity:0.07"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Protocol Internals · 3 of 3</span>
+                <span class="lang-de">Protokoll von innen · 3 von 3</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">How MCP Executes Tools</span>
+                <span class="lang-de">Wie MCP Tools ausführt</span>
+            </h2>
+
+            <svg class="seq-diagram anim-fade-up" data-delay="0.18" viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="arr3" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(226,0,116,0.8)"/>
+        </marker>
+        <marker id="arr3-b" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(0,168,160,0.8)"/>
+        </marker>
+    </defs>
+    <!-- Actors -->
+    <g class="seq-group">
+        <rect x="20" y="10" width="180" height="50" rx="10" fill="rgba(226,0,116,0.1)" stroke="rgba(226,0,116,0.35)" stroke-width="2"/>
+        <text x="110" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">LLM App</text>
+        <line x1="110" y1="60" x2="110" y2="350" stroke="rgba(226,0,116,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <g class="seq-group">
+        <rect x="290" y="10" width="180" height="50" rx="10" fill="rgba(0,153,216,0.1)" stroke="rgba(0,153,216,0.35)" stroke-width="2"/>
+        <text x="380" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">MCP Client</text>
+        <line x1="380" y1="60" x2="380" y2="350" stroke="rgba(0,153,216,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <g class="seq-group">
+        <rect x="560" y="10" width="180" height="50" rx="10" fill="rgba(0,168,160,0.1)" stroke="rgba(0,168,160,0.35)" stroke-width="2"/>
+        <text x="650" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="700" fill="#f0f0f5">MCP Server</text>
+        <line x1="650" y1="60" x2="650" y2="350" stroke="rgba(0,168,160,0.6)" stroke-width="2" stroke-dasharray="6,5"/>
+    </g>
+    <!-- tools/call → -->
+    <g class="seq-group">
+        <line x1="382" y1="115" x2="648" y2="115" stroke="rgba(226,0,116,0.7)" stroke-width="2.5" marker-end="url(#arr3)"/>
+        <text x="516" y="105" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="600" fill="#f0f0f5">tools/call</text>
+    </g>
+    <!-- execute box -->
+    <g class="seq-group">
+        <rect x="588" y="130" width="124" height="40" rx="8" fill="rgba(0,168,160,0.15)" stroke="rgba(0,168,160,0.3)" stroke-width="1.5"/>
+        <text x="650" y="156" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#00A8A0">
+            <tspan class="lang-en">execute…</tspan>
+            <tspan class="lang-de">ausführen…</tspan>
+        </text>
+    </g>
+    <!-- ← content array -->
+    <g class="seq-group">
+        <line x1="648" y1="200" x2="382" y2="200" stroke="rgba(0,168,160,0.7)" stroke-width="2.5" marker-end="url(#arr3-b)"/>
+        <text x="516" y="190" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="600" fill="#f0f0f5">
+            <tspan class="lang-en">content array</tspan>
+            <tspan class="lang-de">content Array</tspan>
+        </text>
+    </g>
+    <!-- LLM context box showing appended result -->
+    <g class="seq-group">
+        <rect x="15" y="228" width="360" height="78" rx="10" fill="rgba(10,10,20,0.7)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <text x="36" y="256" font-family="monospace" font-size="16" fill="#8888a2">[get_employee_data]</text>
+        <text x="36" y="283" font-family="monospace" font-size="16" fill="#c8c8e0">{ name: "Alice", id: "EMP001" }</text>
+    </g>
+</svg>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 08 — MCP EXTENDS YOUR PROMPT
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-prompt-context">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1" style="opacity:0.1"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">The Core Risk</span>
+                <span class="lang-de">Das Kernrisiko</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">MCP Extends Your Prompt</span>
+                <span class="lang-de">MCP erweitert deinen Prompt</span>
+            </h2>
+            <p class="lead anim-fade-up" data-delay="0.16">
+                <span class="lang-en">MCP has no sandbox. It adds text to the LLM's context window — from external, potentially untrusted sources.</span>
+                <span class="lang-de">MCP hat keine Sandbox. Es fügt Text aus externen, potenziell nicht vertrauenswürdigen Quellen in das Kontextfenster des LLM ein.</span>
+            </p>
+
+            <div class="context-diagram anim-fade-up" data-delay="0.26">
+                <div class="ctx-box" style="margin-bottom:16px">
+                    <div class="ctx-header">
+                        <span class="lang-en">LLM Context Window</span>
+                        <span class="lang-de">LLM-Kontextfenster</span>
+                    </div>
+                    <div class="ctx-row">
+                        <span class="ctx-tag ctx-tag-system">System</span>
+                        <span class="lang-en">You are a helpful HR assistant…</span>
+                        <span class="lang-de">Du bist ein hilfreicher HR-Assistent…</span>
+                    </div>
+                    <div class="ctx-row ctx-row-mcp">
+                        <span class="ctx-tag ctx-tag-mcp">MCP</span>
+                        get_employee_data(id: string): <em style="color:var(--text-muted)">Returns employee records for the given ID.</em>
+                    </div>
+                    <div class="ctx-row">
+                        <span class="ctx-tag ctx-tag-user">User</span>
+                        <span class="lang-en">Who is employee EMP001?</span>
+                        <span class="lang-de">Wer ist Mitarbeiter EMP001?</span>
+                    </div>
+                    <div style="padding:8px 18px; background:rgba(232,109,15,0.12); border-top:1px solid rgba(232,109,15,0.3); border-bottom:1px solid rgba(232,109,15,0.3); font-family:var(--font); font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--orange);">
+                        <span class="lang-en">① LLM Response</span>
+                        <span class="lang-de">① LLM-Antwort</span>
+                    </div>
+                    <div class="ctx-row ctx-row-mcp">
+                        <span class="ctx-tag ctx-tag-call">Call</span>
+                        get_employee_data({ id: "EMP001" })
+                    </div>
+                    <div style="padding:8px 18px; background:rgba(255,68,102,0.08); border-top:1px solid rgba(255,68,102,0.25); border-bottom:1px solid rgba(255,68,102,0.25); font-family:var(--font); font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--red);">
+                        <span class="lang-en">Tool Execution</span>
+                        <span class="lang-de">Tool-Ausführung</span>
+                    </div>
+                    <div class="ctx-row ctx-row-mcp-result">
+                        <span class="ctx-tag ctx-tag-result">Result</span>
+                        <span class="lang-en">{ name: "Alice", id: "EMP001" }</span>
+                        <span class="lang-de">{ name: "Alice", id: "EMP001" }</span>
+                    </div>
+                </div>
+                <div style="border-radius:10px; border:1px solid rgba(0,168,160,0.2); overflow:hidden;">
+                    <div style="padding:8px 18px; background:rgba(0,168,160,0.12); border-bottom:1px solid rgba(0,168,160,0.3); font-family:var(--font); font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green);">
+                        <span class="lang-en">② LLM Response</span>
+                        <span class="lang-de">② LLM-Antwort</span>
+                    </div>
+                    <div style="padding:14px 18px; background:rgba(0,168,160,0.07); font-size:1.3rem; color:var(--text-secondary); display:flex; align-items:center; gap:12px;">
+                        <span class="ctx-tag ctx-tag-assistant" style="flex-shrink:0">Assistant</span>
+                        <span class="lang-en">Employee EMP001 is Alice.</span>
+                        <span class="lang-de">Mitarbeiter EMP001 ist Alice.</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 09 — LIVE DEMO
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-demo">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1" style="opacity:0.12"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Live Demo</span>
+                <span class="lang-de">Live-Demo</span>
+            </div>
+
+            <div class="demo-placeholder anim-fade-up" data-delay="0.1">
+                <div class="demo-icon">🖥️</div>
+                <h2>
+                    <span class="lang-en">Live Demo</span>
+                    <span class="lang-de">Live-Demo</span>
+                </h2>
+                <div class="demo-instruction">
+                    <span class="lang-en">Demonstrates attacks on MCP servers and how they manipulate AI agent behavior.</span>
+                    <span class="lang-de">Demonstriert Angriffe auf MCP-Server und wie sie das Verhalten von KI-Agenten manipulieren.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 12 — DEFENSE PRINCIPLES
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-mitigations">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-3" style="opacity:0.08"></div>
+        </div>
+        <div class="content">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Defenses</span>
+                <span class="lang-de">Abwehr</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">Defense Principles</span>
+                <span class="lang-de">Abwehrprinzipien</span>
+            </h2>
+
+            <div class="principle-card" style="margin-top:32px">
+                <div class="principle-number">1</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">Zero Trust for Tool Outputs</span>
+                        <span class="lang-de">Zero Trust für Tool-Ausgaben</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Sanitize every tool response before feeding it to the LLM context.</span>
+                        <span class="lang-de">Jede Tool-Antwort bereinigen, bevor sie dem LLM-Kontext zugeführt wird.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="principle-card" style="margin-top:16px">
+                <div class="principle-number">2</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">Least Privilege</span>
+                        <span class="lang-de">Least Privilege</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Each MCP server gets only the permissions it needs — no cross-server authority.</span>
+                        <span class="lang-de">Jeder MCP-Server erhält nur die nötigen Berechtigungen — keine serverübergreifende Autorität.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="principle-card" style="margin-top:16px">
+                <div class="principle-number">3</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">Human in the Loop</span>
+                        <span class="lang-de">Human in the Loop</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Explicit confirmation before any write, send, or delete — regardless of agent confidence.</span>
+                        <span class="lang-de">Explizite Bestätigung vor Schreiben, Senden oder Löschen — unabhängig vom Vertrauen des Agenten.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 13 — ENTERPRISE CHECKLIST
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-checklist">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+        </div>
+        <div class="content">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Enterprise Readiness</span>
+                <span class="lang-de">Unternehmensbereitschaft</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">Before You Deploy</span>
+                <span class="lang-de">Vor dem Produktiveinsatz</span>
+            </h2>
+
+            <div class="checklist-grid anim-fade-up" data-delay="0.18">
+                <div class="checklist-col">
+                    <h3>
+                        <span class="lang-en">Design</span>
+                        <span class="lang-de">Design</span>
+                    </h3>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Tool names namespaced per server</span>
+                        <span class="lang-de">Tool-Namen pro Server mit Namespace</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Descriptions stripped of non-printable chars</span>
+                        <span class="lang-de">Beschreibungen ohne nicht druckbare Zeichen</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Permissions modeled explicitly</span>
+                        <span class="lang-de">Berechtigungen explizit modelliert</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Server identity verified before connection</span>
+                        <span class="lang-de">Server-Identität vor Verbindung geprüft</span>
+                    </div>
+                </div>
+                <div class="checklist-col">
+                    <h3>
+                        <span class="lang-en">Runtime</span>
+                        <span class="lang-de">Laufzeit</span>
+                    </h3>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Tool output sanitization pipeline</span>
+                        <span class="lang-de">Tool-Output-Bereinigungspipeline</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Audit log for all tool calls</span>
+                        <span class="lang-de">Audit-Log für alle Tool-Aufrufe</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Confirmation flow for destructive tools</span>
+                        <span class="lang-de">Bestätigungsflow für destruktive Tools</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Dependency pinning — no auto-updates</span>
+                        <span class="lang-de">Dependency-Pinning — keine Auto-Updates</span>
+                    </div>
+                </div>
+                <div class="checklist-col">
+                    <h3>
+                        <span class="lang-en">Monitoring</span>
+                        <span class="lang-de">Monitoring</span>
+                    </h3>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Anomaly detection on tool call patterns</span>
+                        <span class="lang-de">Anomalieerkennung für Tool-Call-Muster</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Data source integrity monitoring</span>
+                        <span class="lang-de">Datenquellen-Integritätsüberwachung</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Incident response playbook</span>
+                        <span class="lang-de">Incident-Response-Playbook</span>
+                    </div>
+                    <div class="checklist-item"><span class="check-icon">✓</span>
+                        <span class="lang-en">Regular manifest audits</span>
+                        <span class="lang-de">Regelmäßige Manifest-Audits</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 14 — SAFE ARCHITECTURE
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-safe-arch">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-3" style="opacity:0.08"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Reference Architecture</span>
+                <span class="lang-de">Referenzarchitektur</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">A Secure Architecture</span>
+                <span class="lang-de">Eine sichere Architektur</span>
+            </h2>
+
+            <svg class="arch-diagram anim-fade-up" data-delay="0.18" viewBox="0 0 1300 400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="arch-arr" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="rgba(226,0,116,0.8)"/>
+        </marker>
+    </defs>
+    <!-- User / IDE -->
+    <g class="arch-group">
+        <rect x="10" y="118" width="165" height="120" rx="14" fill="rgba(226,0,116,0.07)" stroke="rgba(226,0,116,0.25)" stroke-width="2"/>
+        <text x="92" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="38">👤</text>
+        <text x="92" y="206" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" font-weight="600" fill="#f0f0f5">
+            <tspan class="lang-en">User / IDE</tspan>
+            <tspan class="lang-de">Nutzer</tspan>
+        </text>
+    </g>
+    <!-- Arrow 1 -->
+    <g class="arch-group">
+        <line x1="177" y1="178" x2="247" y2="178" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#arch-arr)"/>
+    </g>
+    <!-- Agent Host -->
+    <g class="arch-group">
+        <rect x="249" y="90" width="195" height="176" rx="14" fill="rgba(0,153,216,0.07)" stroke="rgba(0,153,216,0.25)" stroke-width="2"/>
+        <text x="346" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-size="38">🤖</text>
+        <text x="346" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" font-weight="600" fill="#f0f0f5">Agent Host</text>
+        <text x="346" y="222" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">LLM App</text>
+    </g>
+    <!-- Arrow 2 -->
+    <g class="arch-group">
+        <line x1="446" y1="178" x2="516" y2="178" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#arch-arr)"/>
+    </g>
+    <!-- Security Proxy -->
+    <g class="arch-group">
+        <rect x="518" y="28" width="340" height="318" rx="16" fill="rgba(226,0,116,0.08)" stroke="rgba(226,0,116,0.45)" stroke-width="2.5"/>
+        <text x="688" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" letter-spacing="1" fill="#E20074">
+            <tspan class="lang-en">SECURITY PROXY</tspan>
+            <tspan class="lang-de">SICHERHEITS-PROXY</tspan>
+        </text>
+        <text x="688" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🔍 <tspan class="lang-en">audit</tspan><tspan class="lang-de">prüfen</tspan></text>
+        <text x="688" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🧹 <tspan class="lang-en">sanitize</tspan><tspan class="lang-de">bereinigen</tspan></text>
+        <text x="688" y="204" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🔒 <tspan class="lang-en">enforce</tspan><tspan class="lang-de">durchsetzen</tspan></text>
+        <text x="688" y="246" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">📋 <tspan class="lang-en">log</tspan><tspan class="lang-de">protokollieren</tspan></text>
+        <text x="688" y="288" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🔑 <tspan class="lang-en">authenticate</tspan><tspan class="lang-de">authentifizieren</tspan></text>
+    </g>
+    <!-- Arrow 3 -->
+    <g class="arch-group">
+        <line x1="860" y1="178" x2="930" y2="178" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#arch-arr)"/>
+    </g>
+    <!-- Trusted MCP Servers -->
+    <g class="arch-group">
+        <rect x="932" y="44" width="340" height="282" rx="16" fill="rgba(0,168,160,0.07)" stroke="rgba(0,168,160,0.3)" stroke-width="2"/>
+        <text x="1102" y="94" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" letter-spacing="1" fill="#00A8A0">
+            <tspan class="lang-en">TRUSTED SERVERS</tspan>
+            <tspan class="lang-de">VERTRAUENS-SERVER</tspan>
+        </text>
+        <text x="1102" y="144" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">✅ HR</text>
+        <text x="1102" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">
+            <tspan class="lang-en">✅ Calendar</tspan>
+            <tspan class="lang-de">✅ Kalender</tspan>
+        </text>
+        <text x="1102" y="240" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">
+            <tspan class="lang-en">✅ Documents</tspan>
+            <tspan class="lang-de">✅ Dokumente</tspan>
+        </text>
+        <text x="1102" y="284" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">
+            <tspan class="lang-en">verified · scoped · audited</tspan>
+            <tspan class="lang-de">geprüft · begrenzt · auditiert</tspan>
+        </text>
+    </g>
+</svg>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 15 — IDE AUTH PROBLEM
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-ide-auth">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1" style="opacity:0.08"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Auth Challenge</span>
+                <span class="lang-de">Auth-Herausforderung</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">The IDE Auth Problem</span>
+                <span class="lang-de">Das IDE-Auth-Problem</span>
+            </h2>
+            <p class="lead anim-fade-up" data-delay="0.16">
+                <span class="lang-en">Every coding assistant implements OAuth 2.1 differently — making it hard to support all clients from one MCP server.</span>
+                <span class="lang-de">Jeder Coding-Assistent implementiert OAuth anders — was es schwierig macht, alle Clients von einem MCP-Server zu unterstützen.</span>
+            </p>
+
+            <div class="ide-row anim-fade-up" data-delay="0.22">
+                <div class="ide-chip"><span class="ide-chip-icon">🐙</span> GitHub Copilot</div>
+                <div class="ide-connector">≠</div>
+                <div class="ide-chip"><span class="ide-chip-icon">⚡</span> Claude Code</div>
+                <div class="ide-connector">≠</div>
+                <div class="ide-chip"><span class="ide-chip-icon">🤖</span> Codex CLI</div>
+                <div class="ide-connector">≠</div>
+                <div class="ide-chip"><span class="ide-chip-icon">💎</span> Gemini CLI</div>
+            </div>
+
+            <div class="card-grid-2 anim-fade-up" data-delay="0.3" style="max-width:760px; margin-top:24px">
+                <div class="info-card" style="border-color:rgba(255,68,102,0.2)">
+                    <h3 style="color:var(--red)">
+                        <span class="lang-en">🚫 No OAuth Client ID</span>
+                        <span class="lang-de">🚫 Keine OAuth-Client-ID</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Local IDEs have no pre-registered client ID — no standard way to identify them.</span>
+                        <span class="lang-de">Lokale IDEs haben keine vorregistrierte Client-ID — kein Standard zur Identifikation.</span>
+                    </p>
+                </div>
+                <div class="info-card" style="border-color:rgba(232,109,15,0.2)">
+                    <h3 style="color:var(--orange)">
+                        <span class="lang-en">📜 Dynamic Client Registration</span>
+                        <span class="lang-de">📜 Dynamische Client-Registrierung</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Was the workaround — already <strong>deprecated</strong>. Successor (Client ID Metadata Documents) still an IETF draft.</span>
+                        <span class="lang-de">War der Workaround — bereits <strong>deprecated</strong>. Nachfolger (Client ID Metadata Documents) noch ein IETF-Entwurf.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 16 — h2m SERVICE
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-h2m-service">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-3" style="opacity:0.08"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Solution</span>
+                <span class="lang-de">Lösung</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">Solving IDE Auth: the h2m Service</span>
+                <span class="lang-de">IDE-Auth lösen: der h2m-Dienst</span>
+            </h2>
+            <p class="lead anim-fade-up" data-delay="0.16">
+                <span class="lang-en">An optional <strong>h2m</strong> service bridges human SSO identity into the MCP flow.</span>
+                <span class="lang-de">Ein optionaler <strong>h2m</strong>-Dienst überbrückt die menschliche SSO-Identität in den MCP-Ablauf.</span>
+            </p>
+
+            <svg class="arch-diagram anim-fade-up" data-delay="0.24" viewBox="0 0 1494 340" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker id="h2m-arr" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="rgba(226,0,116,0.8)"/>
+        </marker>
+    </defs>
+    <!-- IDE -->
+    <g class="h2m-group">
+        <rect x="10" y="88" width="170" height="140" rx="14" fill="rgba(0,153,216,0.07)" stroke="rgba(0,153,216,0.3)" stroke-width="2"/>
+        <text x="95" y="142" text-anchor="middle" font-family="Inter,sans-serif" font-size="38">💻</text>
+        <text x="95" y="190" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" font-weight="600" fill="#f0f0f5">IDE / Client</text>
+    </g>
+    <!-- Arrow 1 -->
+    <g class="h2m-group">
+        <line x1="182" y1="158" x2="278" y2="158" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
+        <text x="230" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#8888a2">SSO</text>
+    </g>
+    <!-- h2m Service -->
+    <g class="h2m-group">
+        <rect x="280" y="30" width="260" height="280" rx="16" fill="rgba(226,0,116,0.1)" stroke="rgba(226,0,116,0.5)" stroke-width="2.5"/>
+        <text x="410" y="80" text-anchor="middle" font-family="Inter,sans-serif" font-size="34" font-weight="700" fill="#E20074">h2m</text>
+        <text x="410" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">
+            <tspan class="lang-en">human identity</tspan>
+            <tspan class="lang-de">menschl. Identität</tspan>
+        </text>
+        <text x="410" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-size="26">↓</text>
+        <text x="410" y="186" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
+            <tspan class="lang-en">m2m access token</tspan>
+            <tspan class="lang-de">m2m-Zugriffstoken</tspan>
+        </text>
+        <text x="410" y="218" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">X-Identity-Header</text>
+        <text x="410" y="272" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#666688" font-style="italic">optional</text>
+    </g>
+    <!-- Arrow 2 -->
+    <g class="h2m-group">
+        <line x1="542" y1="168" x2="738" y2="168" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
+        <text x="640" y="118" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#8888a2">
+            <tspan class="lang-en">m2m token</tspan>
+            <tspan class="lang-de">m2m-Token</tspan>
+        </text>
+        <text x="640" y="142" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#8888a2">X-Identity-Header</text>
+    </g>
+    <!-- Security Proxy -->
+    <g class="h2m-group">
+        <rect x="740" y="30" width="280" height="262" rx="16" fill="rgba(226,0,116,0.07)" stroke="rgba(226,0,116,0.45)" stroke-width="2.5"/>
+        <text x="880" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" font-weight="700" fill="#E20074">
+            <tspan class="lang-en">Security Proxy</tspan>
+            <tspan class="lang-de">Sicherheits-Proxy</tspan>
+        </text>
+        <text x="880" y="130" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🔍 <tspan class="lang-en">audit</tspan><tspan class="lang-de">prüfen</tspan></text>
+        <text x="880" y="176" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🧹 <tspan class="lang-en">sanitize</tspan><tspan class="lang-de">bereinigen</tspan></text>
+        <text x="880" y="222" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">📋 <tspan class="lang-en">log</tspan><tspan class="lang-de">protokollieren</tspan></text>
+    </g>
+    <!-- Arrow 3 -->
+    <g class="h2m-group">
+        <line x1="1022" y1="158" x2="1242" y2="158" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
+        <text x="1132" y="103" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#8888a2">
+            <tspan class="lang-en">gateway token</tspan>
+            <tspan class="lang-de">Gateway-Token</tspan>
+        </text>
+        <text x="1132" y="127" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#8888a2">X-Identity-Header</text>
+    </g>
+    <!-- Trusted Servers -->
+    <g class="h2m-group">
+        <rect x="1244" y="44" width="218" height="228" rx="16" fill="rgba(0,168,160,0.07)" stroke="rgba(0,168,160,0.3)" stroke-width="2"/>
+        <text x="1353" y="92" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" fill="#00A8A0">
+            <tspan class="lang-en">Trusted</tspan>
+            <tspan class="lang-de">Trusted</tspan>
+        </text>
+        <text x="1353" y="122" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" fill="#00A8A0">Servers</text>
+        <text x="1353" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">✅ HR</text>
+        <text x="1353" y="200" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">
+            <tspan class="lang-en">✅ Calendar</tspan>
+            <tspan class="lang-de">✅ Kalender</tspan>
+        </text>
+        <text x="1353" y="238" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">
+            <tspan class="lang-en">✅ Documents</tspan>
+            <tspan class="lang-de">✅ Dokumente</tspan>
+        </text>
+    </g>
+</svg>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 17 — FURTHER MCP CHALLENGES
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-further-challenges">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1" style="opacity:0.08"></div>
+        </div>
+        <div class="content">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Further Challenges</span>
+                <span class="lang-de">Weitere Herausforderungen</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">More Structural Problems</span>
+                <span class="lang-de">Weitere strukturelle Probleme</span>
+            </h2>
+
+            <div class="card-grid-2 anim-fade-up" data-delay="0.18">
+                <div class="info-card" style="border-color:rgba(232,109,15,0.25)">
+                    <h3 style="color:var(--orange)">
+                        <span class="lang-en">⚡ Elicitation</span>
+                        <span class="lang-de">⚡ Elicitation</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Requires interactive user input — headless agents running unattended cannot respond to elicitation requests.</span>
+                        <span class="lang-de">Erfordert interaktive Benutzereingaben — Headless-Agents, die unbeaufsichtigt laufen, können Elicitation-Anfragen nicht beantworten.</span>
+                    </p>
+                </div>
+                <div class="info-card" style="border-color:rgba(255,68,102,0.25)">
+                    <h3 style="color:var(--red)">
+                        <span class="lang-en">🔄 Sampling</span>
+                        <span class="lang-de">🔄 Sampling</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Reverts the client-server architecture — the server calls back into the client LLM, bypassing all control and audit mechanisms.</span>
+                        <span class="lang-de">Kehrt die Client-Server-Architektur um — der Server ruft das Client-LLM zurück und umgeht dabei alle Kontroll- und Audit-Mechanismen.</span>
+                    </p>
+                </div>
+                <div class="info-card" style="border-color:rgba(232,109,15,0.25)">
+                    <h3 style="color:var(--orange)">
+                        <span class="lang-en">📌 Sessions</span>
+                        <span class="lang-de">📌 Sessions</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Requires stateful implementations and sticky routing in the proxy — problematic for high availability and load balancing.</span>
+                        <span class="lang-de">Erfordert zustandsbehaftete Implementierungen und Sticky-Routing im Proxy — schwierig für High Availability und Load-Balancing.</span>
+                    </p>
+                </div>
+                <div class="info-card" style="border-color:rgba(232,109,15,0.25)">
+                    <h3 style="color:var(--orange)">
+                        <span class="lang-en">🔍 JSON-RPC Routing</span>
+                        <span class="lang-de">🔍 JSON-RPC-Routing</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Requires payload inspection to route requests — unlike REST APIs where the URL alone determines the route.</span>
+                        <span class="lang-de">Erfordert Payload-Inspektion für das Routing — anders als bei REST-APIs, bei denen die URL allein die Route bestimmt.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 18 — SPEC IS CATCHING UP
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-spec-added">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-3" style="opacity:0.08"></div>
+        </div>
+        <div class="content">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Spec Updates</span>
+                <span class="lang-de">Spec-Updates</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">The Spec Is Catching Up</span>
+                <span class="lang-de">Die Spezifikation holt auf</span>
+            </h2>
+
+            <div class="spec-card anim-fade-up" data-delay="0.18">
+                <div class="spec-card-icon">🪪</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">MCP Server Cards (SEP-2127)</span>
+                        <span class="lang-de">MCP Server Cards (SEP-2127)</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Signed manifests prevent <strong>rug pulls</strong> — servers can no longer silently swap their tool list after being trusted.</span>
+                        <span class="lang-de">Signierte Manifeste verhindern <strong>Rug Pulls</strong> — Server können ihre Tool-Liste nach Vertrauensvergabe nicht mehr heimlich austauschen.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="spec-card anim-fade-up" data-delay="0.3">
+                <div class="spec-card-icon">🔀</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">HTTP Streamable Transport (SEP-2243)</span>
+                        <span class="lang-de">HTTP Streamable Transport (SEP-2243)</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Standard HTTP transport enables proper <strong>middle boxes</strong> — proxies and gateways can route MCP traffic without payload inspection.</span>
+                        <span class="lang-de">Standardisierter HTTP-Transport ermöglicht echte <strong>Middle Boxes</strong> — Proxies können MCP-Traffic routen ohne Payload-Inspektion.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="spec-card anim-fade-up" data-delay="0.42">
+                <div class="spec-card-icon">🏢</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">Enterprise-Managed Authorization (SEP-990)</span>
+                        <span class="lang-de">Enterprise-Managed Authorization (SEP-990)</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Enterprises centrally control which MCP servers users may access. Via IdP authentication and ID-JAG token exchange, access is granted automatically — without manual approval per server.</span>
+                        <span class="lang-de">Unternehmen steuern zentral, auf welche MCP-Server Nutzer zugreifen dürfen. Über IdP-Authentifizierung und ID-JAG-Token-Austausch wird der Zugriff automatisch gewährt — ohne manuelle Freigabe pro Server.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 18 — WHAT'S STILL MISSING
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-spec-gaps">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+        </div>
+        <div class="content">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Remaining Gaps</span>
+                <span class="lang-de">Verbleibende Lücken</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">What's Still Missing</span>
+                <span class="lang-de">Was noch fehlt</span>
+            </h2>
+
+            <div class="feature-split anim-fade-up" data-delay="0.18">
+                <div class="feature-col feature-col-missing">
+                    <h3>
+                        <span class="lang-en">In the Protocol</span>
+                        <span class="lang-de">Im Protokoll</span>
+                    </h3>
+                    <div class="feature-item">
+                        <span class="feature-item-icon fi-missing">—</span>
+                        <span class="lang-en">No tool namespace standard</span>
+                        <span class="lang-de">Kein Tool-Namespace-Standard</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-item-icon fi-missing">—</span>
+                        <span class="lang-en">No output sanitization specification</span>
+                        <span class="lang-de">Keine Output-Sanitization-Spezifikation</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-item-icon fi-missing">—</span>
+                        <span class="lang-en">No cross-server isolation</span>
+                        <span class="lang-de">Keine serverübergreifende Isolation</span>
+                    </div>
+                </div>
+
+                <div class="feature-col feature-col-missing">
+                    <h3>
+                        <span class="lang-en">For Client Auth</span>
+                        <span class="lang-de">Für Client-Auth</span>
+                    </h3>
+                    <div class="feature-item">
+                        <span class="feature-item-icon fi-missing">—</span>
+                        <span class="lang-en">Dynamic Client Registration: deprecated</span>
+                        <span class="lang-de">Dynamic Client Registration: deprecated</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-item-icon fi-missing">—</span>
+                        <span class="lang-en">Client ID Metadata Documents: still IETF draft</span>
+                        <span class="lang-de">Client ID Metadata Documents: noch IETF-Entwurf</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-item-icon fi-missing">—</span>
+                        <span class="lang-en">Each coding assistant: different auth flow</span>
+                        <span class="lang-de">Jeder Coding-Assistent: eigener Auth-Flow</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 19 — TAKEAWAYS
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-takeaways">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1" style="opacity:0.1"></div>
+        </div>
+        <div class="content">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Takeaways</span>
+                <span class="lang-de">Fazit</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">Three Things to Remember</span>
+                <span class="lang-de">Drei Dinge zum Merken</span>
+            </h2>
+
+            <div class="takeaway-card" style="margin-top:32px; opacity:0">
+                <div class="takeaway-num">1</div>
+                <p>
+                    <span class="lang-en">MCP is powerful and <strong>insecure by default</strong>. The protocol delegates security entirely to the implementation.</span>
+                    <span class="lang-de">MCP ist mächtig und <strong>standardmäßig unsicher</strong>. Das Protokoll delegiert Sicherheit vollständig an die Implementierung.</span>
+                </p>
+            </div>
+
+            <div class="takeaway-card" style="opacity:0">
+                <div class="takeaway-num">2</div>
+                <p>
+                    <span class="lang-en">All MCP content is <strong>prompt input</strong>. Sanitize it. Same principles as SQL injection prevention — applied to LLM context.</span>
+                    <span class="lang-de">Alle MCP-Inhalte sind <strong>Prompt-Eingaben</strong>. Bereinige sie. Gleiche Prinzipien wie SQL-Injection-Schutz — angewendet auf den LLM-Kontext.</span>
+                </p>
+            </div>
+
+            <div class="takeaway-card" style="opacity:0">
+                <div class="takeaway-num">3</div>
+                <p>
+                    <span class="lang-en">Build a <strong>security layer</strong>, not just security checks. A proxy between agent and servers enforces policy centrally.</span>
+                    <span class="lang-de">Baue eine <strong>Sicherheitsschicht</strong>, nicht nur Sicherheitsprüfungen. Ein Proxy zwischen Agent und Servern setzt Richtlinien zentral durch.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 20 — THANK YOU
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-thankyou">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-1" style="opacity:0.12"></div>
+            <div class="glow-orb glow-orb-2" style="opacity:0.1"></div>
+        </div>
+        <div class="content content-center">
+            <div class="thankyou-content">
+                <h1 class="anim-fade-up" data-delay="0" style="font-size:clamp(4rem,9vw,8rem); margin-bottom:48px; line-height:1; white-space:nowrap">
+                    <span class="text-gradient lang-en">Thank You!</span>
+                    <span class="text-gradient lang-de">Danke!</span>
+                </h1>
+
+                <div class="qr-container anim-fade-up" data-delay="0.1">
+                    <img src="assets/qr-mcp-security.png" alt="QR code linking to github.com/telekom/mcp-security" width="240" height="240">
+                </div>
+
+                <h2 class="anim-fade-up" data-delay="0.2" style="font-size:clamp(1.4rem,3vw,2rem); font-weight:700; margin-bottom:4px">
+                    <span class="text-gradient">github.com/telekom/mcp-security</span>
+                </h2>
+
+                <p class="anim-fade-up" data-delay="0.28" style="font-size:1rem; color:var(--text-muted); margin:4px 0 32px">
+                    <span class="lang-en">Interactive demo · Source code</span>
+                    <span class="lang-de">Interaktive Demo · Quellcode</span>
+                </p>
+
+                <div class="presenter-badge anim-fade-up" data-delay="0.36"
+                     style="position:static; left:auto; bottom:auto; transform:none; white-space:nowrap; display:inline-block">
+                    <strong>Kai Kreuzer</strong> · Deutsche Telekom IT GmbH · kai.kreuzer@telekom.de
+                </div>
+                <p class="anim-fade-up" data-delay="0.44" style="font-size:0.9rem; color:var(--text-muted); margin-top:16px">
+                    <span class="lang-en">Slides: <a href="LICENSE" style="color:var(--text-muted)">CC BY-SA 4.0</a> · Code: <a href="../LICENSE" style="color:var(--text-muted)">MIT</a></span>
+                    <span class="lang-de">Folien: <a href="LICENSE" style="color:var(--text-muted)">CC BY-SA 4.0</a> · Code: <a href="../LICENSE" style="color:var(--text-muted)">MIT</a></span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- GSAP -->
+    <script src="js/gsap.min.js"></script>
+    <script src="js/ScrollTrigger.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * MCP Security Demo — Color System
+ *
+ * Strict 10-color palette. No shades or derived colors.
+ *
+ *  #FFFFFF  White
+ *  #1C1C1C  Near-black
+ *  #757575  Gray
+ *  #E20074  Magenta  (primary)
+ *  #48BCB3  Teal
+ *  #87CEEB  Sky blue
+ *  #F0C4A5  Peach
+ *  #D4CB66  Yellow
+ *  #A3BE8C  Sage green
+ *  #86789B  Purple-gray
+ *
+ * All variables use bare RGB triplets to support Tailwind's
+ * opacity modifier syntax (e.g., bg-primary-500/20).
+ */
+
+/* =========================================
+   Light Theme (Default)
+   ========================================= */
+:root {
+  --background: 255 255 255;        /* white */
+  --foreground: 28 28 28;           /* near-black */
+
+  /* Surface colors — same white base; opacity differentiates layers */
+  --surface: 255 255 255;           /* white */
+  --surface-secondary: 117 117 117; /* gray — used at low opacity by components */
+  --surface-tertiary: 117 117 117;  /* gray */
+
+  /* Border colors */
+  --border: 117 117 117;            /* gray */
+  --border-secondary: 117 117 117;  /* gray */
+
+  /* Primary brand color — Deutsche Telekom Magenta */
+  --primary-500: 226 0 116;
+
+  /* Text colors */
+  --text-primary: 28 28 28;         /* near-black */
+  --text-secondary: 70 70 70;       /* dark gray — contrast ~7:1 on white */
+  --text-tertiary: 100 100 100;     /* medium-dark gray */
+  --text-inverse: 255 255 255;      /* white */
+
+  /* Security severity colors */
+  --security-critical: 226 0 116;   /* magenta */
+  --security-high: 240 196 165;     /* peach */
+  --security-medium: 212 203 102;   /* yellow */
+  --security-low: 72 188 179;       /* teal */
+  --security-info: 134 120 155;     /* purple-gray */
+  --security-safe: 163 190 140;     /* sage green */
+
+  /* Status colors */
+  --status-success: 163 190 140;    /* sage green */
+  --status-warning: 212 203 102;    /* yellow */
+  --status-error: 226 0 116;        /* magenta */
+  --status-info: 135 206 235;       /* sky blue */
+
+  /* Interactive element colors */
+  --interactive: 226 0 116;         /* magenta */
+  --interactive-hover: 28 28 28;    /* near-black */
+  --interactive-active: 28 28 28;   /* near-black */
+  --interactive-disabled: 117 117 117; /* gray */
+
+  /* Accent colors */
+  --accent-teal: 72 188 179;        /* teal */
+  --accent-blue: 135 206 235;       /* sky blue */
+  --accent-purple: 134 120 155;     /* purple-gray */
+  --accent-pink: 226 0 116;         /* magenta */
+  --accent-orange: 240 196 165;     /* peach */
+
+  /* Focus ring */
+  --focus-ring: 226 0 116;
+
+  /* Overlay */
+  --overlay-backdrop: 28 28 28;
+
+  /* shadcn/ui radius */
+  --radius: 0.5rem;
+}
+
+/* =========================================
+   Dark Theme
+   ========================================= */
+.dark {
+  --background: 28 28 28;           /* near-black */
+  --foreground: 255 255 255;        /* white */
+
+  /* Surface colors */
+  --surface: 28 28 28;              /* near-black */
+  --surface-secondary: 117 117 117; /* gray — used at low opacity */
+  --surface-tertiary: 117 117 117;  /* gray */
+
+  /* Border colors */
+  --border: 117 117 117;            /* gray */
+  --border-secondary: 117 117 117;  /* gray */
+
+  /* Primary brand color — Deutsche Telekom Magenta */
+  --primary-500: 226 0 116;
+
+  /* Text colors */
+  --text-primary: 255 255 255;      /* white */
+  --text-secondary: 185 185 185;    /* light gray — contrast ~7:1 on near-black */
+  --text-tertiary: 155 155 155;     /* medium-light gray */
+  --text-inverse: 28 28 28;         /* near-black */
+
+  /* Security severity colors */
+  --security-critical: 226 0 116;   /* magenta */
+  --security-high: 240 196 165;     /* peach */
+  --security-medium: 212 203 102;   /* yellow */
+  --security-low: 72 188 179;       /* teal */
+  --security-info: 134 120 155;     /* purple-gray */
+  --security-safe: 163 190 140;     /* sage green */
+
+  /* Status colors */
+  --status-success: 163 190 140;    /* sage green */
+  --status-warning: 212 203 102;    /* yellow */
+  --status-error: 226 0 116;        /* magenta */
+  --status-info: 135 206 235;       /* sky blue */
+
+  /* Interactive element colors */
+  --interactive: 226 0 116;         /* magenta */
+  --interactive-hover: 255 255 255; /* white */
+  --interactive-active: 255 255 255; /* white */
+  --interactive-disabled: 117 117 117; /* gray */
+
+  /* Accent colors */
+  --accent-teal: 72 188 179;        /* teal */
+  --accent-blue: 135 206 235;       /* sky blue */
+  --accent-purple: 134 120 155;     /* purple-gray */
+  --accent-pink: 226 0 116;         /* magenta */
+  --accent-orange: 240 196 165;     /* peach */
+
+  /* Focus ring */
+  --focus-ring: 226 0 116;
+
+  /* Overlay */
+  --overlay-backdrop: 28 28 28;
+
+  /* shadcn/ui radius */
+  --radius: 0.5rem;
+}
+
+/* =========================================
+   Base Styles
+   ========================================= */
+@layer base {
+  * {
+    @apply border-border/20;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply text-foreground antialiased;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+  }
+
+  /* Fixed full-viewport background that sits behind all content.
+     Carries the base background color so the body itself can be transparent,
+     allowing the gradient to always be visible through un-surfaced areas. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: rgb(var(--background));
+    background-image:
+      radial-gradient(ellipse at 15% 0%, rgb(226 0 116 / 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 100%, rgb(72 188 179 / 0.06) 0%, transparent 55%);
+  }
+
+  .dark body::before {
+    background-image:
+      radial-gradient(ellipse at 15% 0%, rgb(226 0 116 / 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 100%, rgb(72 188 179 / 0.10) 0%, transparent 50%);
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-focus-ring;
+    ring-offset-color: rgb(var(--background));
+  }
+
+  /* Selection styling */
+  ::selection {
+    @apply bg-primary-500/20 text-text-primary;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-surface-secondary/10;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-border/50;
+  }
+
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar-track {
+    @apply bg-surface-secondary/10;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-border/40;
+  }
+}
+
+/* =========================================
+   Component Layer - Reusable UI Patterns
+   ========================================= */
+@layer components {
+  /* Card component base */
+  .card {
+    @apply bg-surface rounded-lg border border-border/20 shadow-soft;
+  }
+
+  .card-elevated {
+    @apply bg-surface rounded-lg border border-border/20 shadow-soft-lg;
+  }
+
+  /* Button base styles */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md font-medium transition-colors duration-200;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-500 text-white hover:bg-interactive-hover active:bg-interactive-active;
+  }
+
+  .btn-secondary {
+    @apply btn bg-surface-secondary/10 text-text-primary border border-border/20;
+    @apply hover:bg-surface-secondary/20 active:bg-surface-secondary/30;
+  }
+
+  .btn-ghost {
+    @apply btn text-text-secondary hover:bg-surface-secondary/10 hover:text-text-primary;
+  }
+
+  .btn-danger {
+    @apply btn bg-status-error text-white hover:bg-red-700 active:bg-red-800;
+  }
+
+  /* Input base styles */
+  .input {
+    @apply w-full rounded-md border border-border/20 bg-surface px-3 py-2;
+    @apply text-text-primary placeholder:text-text-tertiary;
+    @apply focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500;
+    @apply disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-surface-secondary/10;
+    @apply transition-colors duration-200;
+  }
+
+  /* Badge/Tag styles */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+
+  .badge-critical {
+    @apply badge bg-security-critical/10 text-security-critical;
+  }
+
+  .badge-high {
+    @apply badge bg-security-high/10 text-security-high;
+  }
+
+  .badge-medium {
+    @apply badge bg-security-medium/10 text-security-medium;
+  }
+
+  .badge-low {
+    @apply badge bg-security-low/10 text-security-low;
+  }
+
+  .badge-info {
+    @apply badge bg-security-info/10 text-security-info;
+  }
+
+  .badge-safe {
+    @apply badge bg-security-safe/10 text-security-safe;
+  }
+
+  /* Status indicator dot */
+  .status-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
+
+  .status-dot-success {
+    @apply status-dot bg-status-success;
+  }
+
+  .status-dot-warning {
+    @apply status-dot bg-status-warning;
+  }
+
+  .status-dot-error {
+    @apply status-dot bg-status-error;
+  }
+
+  .status-dot-info {
+    @apply status-dot bg-status-info;
+  }
+
+  /* Panel/Section container */
+  .panel {
+    @apply bg-surface border border-border/20 rounded-lg p-4;
+  }
+
+  .panel-header {
+    @apply flex items-center justify-between border-b border-border/20 pb-4 mb-4;
+  }
+
+  /* Sidebar navigation item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2 rounded-md text-text-secondary;
+    @apply hover:bg-surface-secondary/10 hover:text-text-primary;
+    @apply transition-colors duration-200;
+  }
+
+  .nav-item-active {
+    @apply nav-item bg-primary-500/10 text-primary-500 font-medium;
+  }
+
+  /* Table styles */
+  .table-container {
+    @apply w-full overflow-x-auto;
+  }
+
+  .table {
+    @apply w-full border-collapse;
+  }
+
+  .table th {
+    @apply px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider;
+    @apply bg-surface-secondary/10 border-b border-border/20;
+  }
+
+  .table td {
+    @apply px-4 py-3 text-sm text-text-primary border-b border-border/20;
+  }
+
+  .table tr:hover {
+    @apply bg-surface-secondary/10;
+  }
+}
+
+/* =========================================
+   Utility Layer - Custom Utilities
+   ========================================= */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-text-primary;
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-surface/80 backdrop-blur-md border border-border/50;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Truncate with ellipsis */
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Security-specific utilities */
+  .security-glow-critical {
+    box-shadow: 0 0 12px -3px rgb(var(--security-critical));
+  }
+
+  .security-glow-warning {
+    box-shadow: 0 0 12px -3px rgb(var(--status-warning));
+  }
+
+  .security-glow-safe {
+    box-shadow: 0 0 12px -3px rgb(var(--security-safe));
+  }
+
+  /* Focus ring color - needed for base styles */
+  .ring-focus-ring {
+    --tw-ring-color: rgb(var(--focus-ring) / 0.5);
+  }
+}
