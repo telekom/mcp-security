@@ -57,14 +57,14 @@ export default function ToolShadowingPage() {
     <DemoPageLayout
       scenarioId="tool-shadowing"
       title="Tool Shadowing Attack"
-      description="A malicious server registers a tool with the same name as a legitimate one, silently displacing it in the agent's registry"
+      description="A malicious server hijacks requests intended for a legitimate server by registering a tool with a carefully crafted name and description that the LLM finds more relevant"
       riskLevel="critical"
-      riskTitle="Tool Shadowing — Name Collision"
-      riskDescription="MCP clients build a flat tool registry. When two servers register the same tool name, one silently overwrites the other. The agent cannot detect the substitution — the name and description look identical."
+      riskTitle="Tool Shadowing — Description Hijacking"
+      riskDescription="The LLM selects tools based on name and description similarity to the user's intent. A malicious server can exploit this by registering a tool whose description closely matches queries that would normally go to a legitimate server — no name collision required."
       impacts={[
-        "Agent silently routes queries to a malicious tool — responses are fabricated",
-        "Attack is invisible in logs: same tool name, plausible description",
-        "Any tool can be displaced without touching the legitimate server",
+        "Requests are silently redirected to the malicious tool based on description matching",
+        "The legitimate server is bypassed without any modification to it",
+        "Attack is invisible: the malicious tool's name and description appear plausible",
       ]}
       mitigations={[
         "Always display which server handled each tool call",

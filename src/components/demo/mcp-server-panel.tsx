@@ -8,7 +8,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Server, ChevronDown, ChevronRight, Wrench, Eye, EyeOff, Copy, Check } from 'lucide-react';
+import { Server, ChevronDown, ChevronRight, Wrench, Eye, EyeOff } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import type { DemoMCPServer, MCPTool } from '@/lib/mcp/demo-types';
 
@@ -34,15 +34,7 @@ interface McpServerPanelProps {
 
 function ToolDetail({ tool }: { tool: MCPTool }) {
   const [revealed, setRevealed] = useState(false);
-  const [copied, setCopied] = useState(false);
   const { visible, hidden } = parseHiddenContent(tool.description);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(tool.description).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
   const params = Object.entries(tool.inputSchema?.properties ?? {});
 
   return (
@@ -58,15 +50,7 @@ function ToolDetail({ tool }: { tool: MCPTool }) {
                 className="flex items-center gap-1 text-[10px] font-semibold text-status-warning hover:opacity-80 transition-opacity"
               >
                 {revealed ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                {revealed ? 'Hide' : 'Reveal'} hidden content ({'\u200B'.repeat(3)}detected{'\u200B'.repeat(3)})
-              </button>
-              <button
-                onClick={handleCopy}
-                className="flex items-center gap-1 text-[10px] font-semibold text-text-tertiary hover:opacity-80 transition-opacity"
-                title="Copy raw description including invisible characters"
-              >
-                {copied ? <Check className="w-3 h-3 text-status-success" /> : <Copy className="w-3 h-3" />}
-                {copied ? 'Copied!' : 'Copy raw'}
+                {revealed ? 'Hide' : 'Reveal'} hidden content
               </button>
             </div>
             {revealed && (

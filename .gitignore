@@ -45,3 +45,5 @@ next-env.d.ts
 
 # Automaker
 .automaker
+playwright-report/index.html
+test-results/.last-run.json

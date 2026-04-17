@@ -23,7 +23,6 @@ export default function PromptInjectionPage() {
       mitigations={[
         "Treat all tool output as untrusted data, never as instructions",
         "Require explicit user confirmation before any outbound or write action",
-        "Isolate server namespaces — tools from one server must not invoke another",
         "Audit unexpected tool chains: flag calls outside the user's stated intent",
       ]}
       suggestedPrompts={[
