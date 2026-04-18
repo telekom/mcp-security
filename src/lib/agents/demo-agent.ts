@@ -133,6 +133,7 @@ Be proactive in using tools when they can help answer user questions.`;
   async generateResponse(userMessage: string): Promise<{
     response: string;
     toolCalls: Array<{ name: string; arguments: Record<string, any>; result: string }>;
+    promptSnapshot: object;
   }> {
     // Clear previous tool results
     this.lastToolResults.clear();
@@ -156,6 +157,25 @@ Be proactive in using tools when they can help answer user questions.`;
       temperature: this.config.temperature,
       abortSignal: AbortSignal.timeout(30_000),
     });
+
+    // Build snapshot reflecting the full ping-pong context window:
+    // conversationHistory = all prior turns + current user message (sent as initial context)
+    // result.response.messages = all assistant/tool-call/tool-result messages generated across all steps
+    const promptSnapshot = {
+      model: this.config.model,
+      max_tokens: this.config.maxTokens,
+      temperature: this.config.temperature,
+      system: this.config.systemPrompt,
+      tools: this.getAvailableTools().map(t => ({
+        name: t.name,
+        description: t.description,
+        input_schema: t.inputSchema,
+      })),
+      messages: [
+        ...this.conversationHistory,
+        ...result.response.messages,
+      ],
+    };
 
     // Collect tool calls from all steps (result.toolCalls only has the last step)
     const toolCalls: Array<{ name: string; arguments: Record<string, any>; result: string; serverName: string }> = [];
@@ -183,6 +203,7 @@ Be proactive in using tools when they can help answer user questions.`;
     return {
       response: result.text,
       toolCalls,
+      promptSnapshot,
     };
   }
 

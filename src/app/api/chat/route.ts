@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
         success: true,
         response: result.response,
         toolCalls: result.toolCalls,
+        promptSnapshot: result.promptSnapshot,
         scenario: {
           id: scenario.id,
           title: scenario.title,
