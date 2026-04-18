@@ -861,82 +861,81 @@
                 <span class="lang-de">Ein optionaler <strong>h2m</strong>-Dienst überbrückt die menschliche SSO-Identität in den MCP-Ablauf.</span>
             </p>
 
-            <svg class="arch-diagram anim-fade-up" data-delay="0.24" viewBox="0 0 1494 340" xmlns="http://www.w3.org/2000/svg">
+            <svg class="arch-diagram anim-fade-up" data-delay="0.24" viewBox="0 0 2040 410" xmlns="http://www.w3.org/2000/svg" style="max-width:1100px">
     <defs>
         <marker id="h2m-arr" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
             <polygon points="0 0, 12 4, 0 8" fill="rgba(226,0,116,0.8)"/>
         </marker>
     </defs>
-    <!-- IDE -->
+    <!-- IDE / Client  (x=10, w=250, right=260) -->
     <g class="h2m-group">
-        <rect x="10" y="88" width="170" height="140" rx="14" fill="rgba(0,153,216,0.07)" stroke="rgba(0,153,216,0.3)" stroke-width="2"/>
-        <text x="95" y="142" text-anchor="middle" font-family="Inter,sans-serif" font-size="38">💻</text>
-        <text x="95" y="190" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" font-weight="600" fill="#f0f0f5">IDE / Client</text>
+        <rect x="10" y="100" width="250" height="140" rx="14" fill="rgba(0,153,216,0.07)" stroke="rgba(0,153,216,0.3)" stroke-width="2"/>
+        <text x="135" y="152" text-anchor="middle" font-family="Inter,sans-serif" font-size="38">💻</text>
+        <text x="135" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="600" fill="#f0f0f5">IDE / Client</text>
     </g>
-    <!-- Arrow 1 -->
+    <!-- Arrow 1  (262 → 430, label centre=346) -->
     <g class="h2m-group">
-        <line x1="182" y1="158" x2="278" y2="158" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
-        <text x="230" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#8888a2">SSO</text>
+        <line x1="262" y1="170" x2="430" y2="170" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
+        <text x="346" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">SSO</text>
     </g>
-    <!-- h2m Service -->
+    <!-- h2m Service  (x=432, w=280, right=712, centre=572) -->
     <g class="h2m-group">
-        <rect x="280" y="30" width="260" height="280" rx="16" fill="rgba(226,0,116,0.1)" stroke="rgba(226,0,116,0.5)" stroke-width="2.5"/>
-        <text x="410" y="80" text-anchor="middle" font-family="Inter,sans-serif" font-size="34" font-weight="700" fill="#E20074">h2m</text>
-        <text x="410" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">
+        <rect x="432" y="20" width="280" height="300" rx="16" fill="rgba(226,0,116,0.1)" stroke="rgba(226,0,116,0.5)" stroke-width="2.5"/>
+        <text x="572" y="72" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="700" fill="#E20074">h2m</text>
+        <text x="572" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">
             <tspan class="lang-en">human identity</tspan>
             <tspan class="lang-de">menschl. Identität</tspan>
         </text>
-        <text x="410" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-size="26">↓</text>
-        <text x="410" y="186" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
+        <text x="572" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">↓</text>
+        <text x="572" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
             <tspan class="lang-en">m2m access token</tspan>
             <tspan class="lang-de">m2m-Zugriffstoken</tspan>
         </text>
-        <text x="410" y="218" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">X-Identity-Header</text>
-        <text x="410" y="272" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#666688" font-style="italic">optional</text>
+        <text x="572" y="228" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#a0a0b8">X-Identity-Header</text>
+        <text x="572" y="278" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#666688" font-style="italic">optional</text>
     </g>
-    <!-- Arrow 2 -->
+    <!-- Arrow 2  (714 → 932, gap=218, label centre=823) -->
     <g class="h2m-group">
-        <line x1="542" y1="168" x2="738" y2="168" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
-        <text x="640" y="118" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#8888a2">
+        <line x1="714" y1="170" x2="932" y2="170" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
+        <text x="823" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">
             <tspan class="lang-en">m2m token</tspan>
             <tspan class="lang-de">m2m-Token</tspan>
         </text>
-        <text x="640" y="142" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#8888a2">X-Identity-Header</text>
+        <text x="823" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">X-Identity-Header</text>
     </g>
-    <!-- Security Proxy -->
+    <!-- Security Proxy  (x=934, w=420, right=1354, centre=1144) -->
     <g class="h2m-group">
-        <rect x="740" y="30" width="280" height="262" rx="16" fill="rgba(226,0,116,0.07)" stroke="rgba(226,0,116,0.45)" stroke-width="2.5"/>
-        <text x="880" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" font-weight="700" fill="#E20074">
-            <tspan class="lang-en">Security Proxy</tspan>
-            <tspan class="lang-de">Sicherheits-Proxy</tspan>
+        <rect x="934" y="24" width="420" height="292" rx="16" fill="rgba(226,0,116,0.07)" stroke="rgba(226,0,116,0.45)" stroke-width="2.5"/>
+        <text x="1144" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="700" fill="#E20074">
+            <tspan class="lang-en">SECURITY PROXY</tspan>
+            <tspan class="lang-de">SICHERHEITS-PROXY</tspan>
         </text>
-        <text x="880" y="130" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🔍 <tspan class="lang-en">audit</tspan><tspan class="lang-de">prüfen</tspan></text>
-        <text x="880" y="176" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🧹 <tspan class="lang-en">sanitize</tspan><tspan class="lang-de">bereinigen</tspan></text>
-        <text x="880" y="222" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">📋 <tspan class="lang-en">log</tspan><tspan class="lang-de">protokollieren</tspan></text>
+        <text x="1144" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🔍 <tspan class="lang-en">audit</tspan><tspan class="lang-de">prüfen</tspan></text>
+        <text x="1144" y="186" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🧹 <tspan class="lang-en">sanitize</tspan><tspan class="lang-de">bereinigen</tspan></text>
+        <text x="1144" y="232" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">📋 <tspan class="lang-en">log</tspan><tspan class="lang-de">protokollieren</tspan></text>
     </g>
-    <!-- Arrow 3 -->
+    <!-- Arrow 3  (1356 → 1574, gap=218, label centre=1465) -->
     <g class="h2m-group">
-        <line x1="1022" y1="158" x2="1242" y2="158" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
-        <text x="1132" y="103" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#8888a2">
+        <line x1="1356" y1="170" x2="1574" y2="170" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
+        <text x="1465" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">
             <tspan class="lang-en">gateway token</tspan>
             <tspan class="lang-de">Gateway-Token</tspan>
         </text>
-        <text x="1132" y="127" text-anchor="middle" font-family="Inter,sans-serif" font-size="21" fill="#8888a2">X-Identity-Header</text>
+        <text x="1465" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">X-Identity-Header</text>
     </g>
-    <!-- Trusted Servers -->
+    <!-- Trusted Servers  (x=1576, w=450, right=2026, centre=1801) -->
     <g class="h2m-group">
-        <rect x="1244" y="44" width="218" height="228" rx="16" fill="rgba(0,168,160,0.07)" stroke="rgba(0,168,160,0.3)" stroke-width="2"/>
-        <text x="1353" y="92" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" fill="#00A8A0">
-            <tspan class="lang-en">Trusted</tspan>
-            <tspan class="lang-de">Trusted</tspan>
+        <rect x="1576" y="44" width="450" height="252" rx="16" fill="rgba(0,168,160,0.07)" stroke="rgba(0,168,160,0.3)" stroke-width="2"/>
+        <text x="1801" y="100" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="700" fill="#00A8A0">
+            <tspan class="lang-en">TRUSTED SERVERS</tspan>
+            <tspan class="lang-de">VERTRAUENS-SERVER</tspan>
         </text>
-        <text x="1353" y="122" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" fill="#00A8A0">Servers</text>
-        <text x="1353" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">✅ HR</text>
-        <text x="1353" y="200" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">
+        <text x="1801" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">✅ HR</text>
+        <text x="1801" y="194" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">
             <tspan class="lang-en">✅ Calendar</tspan>
             <tspan class="lang-de">✅ Kalender</tspan>
         </text>
-        <text x="1353" y="238" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">
+        <text x="1801" y="238" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">
             <tspan class="lang-en">✅ Documents</tspan>
             <tspan class="lang-de">✅ Dokumente</tspan>
         </text>
