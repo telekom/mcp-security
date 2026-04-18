@@ -194,6 +194,30 @@ watchSection('slide-security-gap', playTimeline, resetTimeline);
     watchSection(id, play, reset);
 });
 
+// --- Slide 08: Prompt Context — step-by-step reveal ---
+// Steps: 0 = only initial rows visible, 1 = ctx-llm1, 2 = ctx-tool, 3 = ctx-llm2
+let _ctxStep = 0;
+const _ctxStepIds = ['ctx-mcp', 'ctx-user', 'ctx-llm1', 'ctx-tool', 'ctx-llm2'];
+
+function _ctxShow(id) {
+    const el = document.getElementById(id);
+    if (el) gsap.fromTo(el, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' });
+}
+function _ctxHide(id) {
+    const el = document.getElementById(id);
+    if (el) gsap.set(el, { opacity: 0, y: 18 });
+}
+
+function playPromptContext() {
+    _ctxStep = 0;
+    _ctxStepIds.forEach(_ctxHide);
+}
+function resetPromptContext() {
+    _ctxStep = 0;
+    _ctxStepIds.forEach(_ctxHide);
+}
+watchSection('slide-prompt-context', playPromptContext, resetPromptContext);
+
 // --- Slide 12: Defense Principle Cards ---
 watchSection('slide-mitigations',
     () => gsap.fromTo('#slide-mitigations .principle-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.18, ease: 'power3.out' }),
@@ -286,6 +310,21 @@ document.addEventListener('keydown', e => {
     const tag = document.activeElement && document.activeElement.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
     e.preventDefault();
+
+    // Slide 08 (prompt-context): ArrowRight reveals sub-steps before advancing
+    const promptIdx = slidesMeta.findIndex(s => s.id === 'slide-prompt-context');
+    if (currentSectionIdx === promptIdx && e.key === 'ArrowRight' && _ctxStep < _ctxStepIds.length) {
+        _ctxShow(_ctxStepIds[_ctxStep]);
+        _ctxStep++;
+        return;
+    }
+    // ArrowLeft on prompt-context: hide last revealed step (or navigate away when fully hidden)
+    if (currentSectionIdx === promptIdx && e.key === 'ArrowLeft' && _ctxStep > 0) {
+        _ctxStep--;
+        _ctxHide(_ctxStepIds[_ctxStep]);
+        return;
+    }
+
     navigateTo(currentSectionIdx + (e.key === 'ArrowRight' ? 1 : -1));
 });
 

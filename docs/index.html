@@ -471,34 +471,38 @@
                         <span class="lang-en">You are a helpful HR assistant…</span>
                         <span class="lang-de">Du bist ein hilfreicher HR-Assistent…</span>
                     </div>
-                    <div class="ctx-row ctx-row-mcp">
+                    <div id="ctx-mcp" class="ctx-row ctx-row-mcp">
                         <span class="ctx-tag ctx-tag-mcp">MCP</span>
                         get_employee_data(id: string): <em style="color:var(--text-muted)">Returns employee records for the given ID.</em>
                     </div>
-                    <div class="ctx-row">
+                    <div id="ctx-user" class="ctx-row">
                         <span class="ctx-tag ctx-tag-user">User</span>
                         <span class="lang-en">Who is employee EMP001?</span>
                         <span class="lang-de">Wer ist Mitarbeiter EMP001?</span>
                     </div>
-                    <div style="padding:8px 18px; background:rgba(232,109,15,0.12); border-top:1px solid rgba(232,109,15,0.3); border-bottom:1px solid rgba(232,109,15,0.3); font-family:var(--font); font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--orange);">
-                        <span class="lang-en">① LLM Response</span>
-                        <span class="lang-de">① LLM-Antwort</span>
+                    <div id="ctx-llm1">
+                        <div style="padding:8px 18px; background:rgba(232,109,15,0.12); border-top:1px solid rgba(232,109,15,0.3); border-bottom:1px solid rgba(232,109,15,0.3); font-family:var(--font); font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--orange);">
+                            <span class="lang-en">① LLM Response</span>
+                            <span class="lang-de">① LLM-Antwort</span>
+                        </div>
+                        <div class="ctx-row ctx-row-mcp">
+                            <span class="ctx-tag ctx-tag-call">Call</span>
+                            get_employee_data({ id: "EMP001" })
+                        </div>
                     </div>
-                    <div class="ctx-row ctx-row-mcp">
-                        <span class="ctx-tag ctx-tag-call">Call</span>
-                        get_employee_data({ id: "EMP001" })
-                    </div>
-                    <div style="padding:8px 18px; background:rgba(255,68,102,0.08); border-top:1px solid rgba(255,68,102,0.25); border-bottom:1px solid rgba(255,68,102,0.25); font-family:var(--font); font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--red);">
-                        <span class="lang-en">Tool Execution</span>
-                        <span class="lang-de">Tool-Ausführung</span>
-                    </div>
-                    <div class="ctx-row ctx-row-mcp-result">
-                        <span class="ctx-tag ctx-tag-result">Result</span>
-                        <span class="lang-en">{ name: "Alice", id: "EMP001" }</span>
-                        <span class="lang-de">{ name: "Alice", id: "EMP001" }</span>
+                    <div id="ctx-tool">
+                        <div style="padding:8px 18px; background:rgba(255,68,102,0.08); border-top:1px solid rgba(255,68,102,0.25); border-bottom:1px solid rgba(255,68,102,0.25); font-family:var(--font); font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--red);">
+                            <span class="lang-en">Tool Execution</span>
+                            <span class="lang-de">Tool-Ausführung</span>
+                        </div>
+                        <div class="ctx-row ctx-row-mcp-result">
+                            <span class="ctx-tag ctx-tag-result">Result</span>
+                            <span class="lang-en">{ name: "Alice", id: "EMP001" }</span>
+                            <span class="lang-de">{ name: "Alice", id: "EMP001" }</span>
+                        </div>
                     </div>
                 </div>
-                <div style="border-radius:10px; border:1px solid rgba(0,168,160,0.2); overflow:hidden;">
+                <div id="ctx-llm2" style="border-radius:10px; border:1px solid rgba(0,168,160,0.2); overflow:hidden;">
                     <div style="padding:8px 18px; background:rgba(0,168,160,0.12); border-bottom:1px solid rgba(0,168,160,0.3); font-family:var(--font); font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green);">
                         <span class="lang-en">② LLM Response</span>
                         <span class="lang-de">② LLM-Antwort</span>
@@ -1043,8 +1047,8 @@
                 <div class="spec-card-icon">🔀</div>
                 <div>
                     <h3>
-                        <span class="lang-en">HTTP Streamable Transport (SEP-2243)</span>
-                        <span class="lang-de">HTTP Streamable Transport (SEP-2243)</span>
+                        <span class="lang-en">HTTP Header Standardization (SEP-2243)</span>
+                        <span class="lang-de">HTTP Header Standardization (SEP-2243)</span>
                     </h3>
                     <p>
                         <span class="lang-en">Standard HTTP transport enables proper <strong>middle boxes</strong> — proxies and gateways can route MCP traffic without payload inspection.</span>
