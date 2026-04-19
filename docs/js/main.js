@@ -35,6 +35,7 @@ const slidesMeta = [
     { id: 'slide-mitigations',    en: 'Defenses',           de: 'Abwehr' },
     { id: 'slide-checklist',      en: 'Checklist',          de: 'Checkliste' },
     { id: 'slide-safe-arch',      en: 'Safe Architecture',  de: 'Sichere Architektur' },
+    { id: 'slide-gateway-auth',   en: 'Gateway Auth',       de: 'Gateway-Auth' },
     { id: 'slide-ide-auth',       en: 'IDE Auth Problem',   de: 'IDE-Auth-Problem' },
     { id: 'slide-h2m-service',    en: 'h2m Service',        de: 'h2m-Dienst' },
     { id: 'slide-further-challenges', en: 'More Challenges', de: 'Weitere Probleme' },
@@ -236,7 +237,26 @@ watchSection('slide-safe-arch',
     () => gsap.set('#slide-safe-arch .arch-group', { opacity: 0, y: 20 })
 );
 
-// --- Slide 16: h2m Architecture Groups ---
+// --- Slide 15: Gateway Auth Groups + caveat sub-step ---
+let _gwCaveatShown = false;
+
+function _showGwCaveat() {
+    const el = document.getElementById('gw-caveats');
+    if (el) gsap.fromTo(el, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' });
+    _gwCaveatShown = true;
+}
+function _hideGwCaveat() {
+    const el = document.getElementById('gw-caveats');
+    if (el) gsap.set(el, { opacity: 0, y: 18 });
+    _gwCaveatShown = false;
+}
+
+watchSection('slide-gateway-auth',
+    () => { gsap.fromTo('#slide-gateway-auth .gw-group', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.18, ease: 'power2.out' }); _hideGwCaveat(); },
+    () => { gsap.set('#slide-gateway-auth .gw-group', { opacity: 0, y: 20 }); _hideGwCaveat(); }
+);
+
+// --- Slide 17: h2m Architecture Groups ---
 watchSection('slide-h2m-service',
     () => gsap.fromTo('#slide-h2m-service .h2m-group', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.2, ease: 'power2.out' }),
     () => gsap.set('#slide-h2m-service .h2m-group', { opacity: 0, y: 20 })
@@ -254,11 +274,7 @@ watchSection('slide-spec-added',
     () => gsap.set('#slide-spec-added .spec-card', { opacity: 0, y: 24 })
 );
 
-// --- Slide 18: Feature Items ---
-watchSection('slide-spec-gaps',
-    () => gsap.fromTo('#slide-spec-gaps .feature-item', { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.1, ease: 'power2.out' }),
-    () => gsap.set('#slide-spec-gaps .feature-item', { opacity: 0, x: -16 })
-);
+// --- Slide 18: gap cards use generic anim-fade-up (per-card data-delay) ---
 
 // --- Slide 19: Takeaway Cards ---
 watchSection('slide-takeaways',
@@ -322,6 +338,17 @@ document.addEventListener('keydown', e => {
     if (currentSectionIdx === promptIdx && e.key === 'ArrowLeft' && _ctxStep > 0) {
         _ctxStep--;
         _ctxHide(_ctxStepIds[_ctxStep]);
+        return;
+    }
+
+    // Slide 15 (gateway-auth): ArrowRight reveals caveat box before advancing
+    const gwIdx = slidesMeta.findIndex(s => s.id === 'slide-gateway-auth');
+    if (currentSectionIdx === gwIdx && e.key === 'ArrowRight' && !_gwCaveatShown) {
+        _showGwCaveat();
+        return;
+    }
+    if (currentSectionIdx === gwIdx && e.key === 'ArrowLeft' && _gwCaveatShown) {
+        _hideGwCaveat();
         return;
     }
 

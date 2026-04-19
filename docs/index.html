@@ -748,8 +748,8 @@
     <g class="arch-group">
         <rect x="518" y="28" width="340" height="318" rx="16" fill="rgba(226,0,116,0.08)" stroke="rgba(226,0,116,0.45)" stroke-width="2.5"/>
         <text x="688" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" letter-spacing="1" fill="#E20074">
-            <tspan class="lang-en">SECURITY PROXY</tspan>
-            <tspan class="lang-de">SICHERHEITS-PROXY</tspan>
+            <tspan class="lang-en">MCP GATEWAY</tspan>
+            <tspan class="lang-de">MCP GATEWAY</tspan>
         </text>
         <text x="688" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🔍 <tspan class="lang-en">audit</tspan><tspan class="lang-de">prüfen</tspan></text>
         <text x="688" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🧹 <tspan class="lang-en">sanitize</tspan><tspan class="lang-de">bereinigen</tspan></text>
@@ -765,8 +765,8 @@
     <g class="arch-group">
         <rect x="932" y="44" width="340" height="282" rx="16" fill="rgba(0,168,160,0.07)" stroke="rgba(0,168,160,0.3)" stroke-width="2"/>
         <text x="1102" y="94" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" font-weight="700" letter-spacing="1" fill="#00A8A0">
-            <tspan class="lang-en">TRUSTED SERVERS</tspan>
-            <tspan class="lang-de">VERTRAUENS-SERVER</tspan>
+            <tspan class="lang-en">MCP SERVERS</tspan>
+            <tspan class="lang-de">MCP-SERVER</tspan>
         </text>
         <text x="1102" y="144" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">✅ HR</text>
         <text x="1102" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">
@@ -787,7 +787,133 @@
     </section>
 
     <!-- ═══════════════════════════════════════════
-         SLIDE 15 — IDE AUTH PROBLEM
+         SLIDE 15 — GATEWAY AUTH
+    ═══════════════════════════════════════════ -->
+    <section class="section" id="slide-gateway-auth">
+        <div class="section-bg">
+            <div class="grid-bg"></div>
+            <div class="glow-orb glow-orb-2" style="opacity:0.08"></div>
+        </div>
+        <div class="content content-center">
+            <div class="section-label anim-fade-up" data-delay="0">
+                <span class="lang-en">Authentication &amp; Authorization</span>
+                <span class="lang-de">Authentifizierung &amp; Autorisierung</span>
+            </div>
+            <h2 class="anim-fade-up" data-delay="0.08">
+                <span class="lang-en">Authentication via the Gateway</span>
+                <span class="lang-de">Authentifizierung über das Gateway</span>
+            </h2>
+
+            <svg class="arch-diagram anim-fade-up" data-delay="0.2" viewBox="0 0 1600 360" xmlns="http://www.w3.org/2000/svg" style="max-width:1100px">
+    <defs>
+        <marker id="gw-arr" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="rgba(226,0,116,0.8)"/>
+        </marker>
+        <marker id="gw-arr-teal" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="rgba(0,168,160,0.8)"/>
+        </marker>
+    </defs>
+
+    <!-- Agent Host (x=10, w=250, right=260, cx=135) -->
+    <g class="gw-group">
+        <rect x="10" y="60" width="250" height="200" rx="14" fill="rgba(0,153,216,0.07)" stroke="rgba(0,153,216,0.25)" stroke-width="2"/>
+        <text x="135" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="38">🤖</text>
+        <text x="135" y="168" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="600" fill="#f0f0f5">Agent Host</text>
+        <text x="135" y="210" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#8888a2">LLM App</text>
+    </g>
+
+    <!-- Arrow 1: Agent → Gateway (gap 262→530=268px, centre=396) -->
+    <g class="gw-group">
+        <line x1="262" y1="160" x2="528" y2="160" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#gw-arr)"/>
+        <text x="395" y="46" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#E20074" font-weight="600">
+            <tspan class="lang-en">Client Credentials</tspan>
+            <tspan class="lang-de">Client Credentials</tspan>
+        </text>
+        <text x="395" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">OAuth 2.1 (M2M)</text>
+        <text x="395" y="102" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">+ X-Identity-Header</text>
+        <text x="395" y="128" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#666688">
+            <tspan class="lang-en">(optional, user context)</tspan>
+            <tspan class="lang-de">(optional, Nutzerkontext)</tspan>
+        </text>
+    </g>
+
+    <!-- MCP Gateway (x=530, w=420, right=950, cx=740) -->
+    <g class="gw-group">
+        <rect x="530" y="18" width="420" height="290" rx="16" fill="rgba(226,0,116,0.07)" stroke="rgba(226,0,116,0.45)" stroke-width="2.5"/>
+        <text x="740" y="72" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="700" fill="#E20074">MCP GATEWAY</text>
+        <text x="740" y="122" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
+            <tspan class="lang-en">✔ verify client credentials</tspan>
+            <tspan class="lang-de">✔ Client-Credentials prüfen</tspan>
+        </text>
+        <text x="740" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
+            <tspan class="lang-en">✔ enforce access policy</tspan>
+            <tspan class="lang-de">✔ Zugriffsrichtlinie durchsetzen</tspan>
+        </text>
+        <text x="740" y="202" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
+            <tspan class="lang-en">✔ attach gateway token</tspan>
+            <tspan class="lang-de">✔ Gateway-Token anhängen</tspan>
+        </text>
+        <text x="740" y="242" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
+            <tspan class="lang-en">✔ forward X-Identity-Header</tspan>
+            <tspan class="lang-de">✔ X-Identity-Header weiterleiten</tspan>
+        </text>
+    </g>
+
+    <!-- Arrow 2: Gateway → Trusted Servers (gap 952→1220=268px, centre=1086) -->
+    <g class="gw-group">
+        <line x1="952" y1="160" x2="1218" y2="160" stroke="rgba(0,168,160,0.8)" stroke-width="3" marker-end="url(#gw-arr-teal)"/>
+        <text x="1085" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#00A8A0" font-weight="600">
+            <tspan class="lang-en">gateway token</tspan>
+            <tspan class="lang-de">Gateway-Token</tspan>
+        </text>
+        <text x="1085" y="114" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">+ X-Identity-Header</text>
+        <text x="1085" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#666688">
+            <tspan class="lang-en">(optional, user context)</tspan>
+            <tspan class="lang-de">(optional, Nutzerkontext)</tspan>
+        </text>
+    </g>
+
+    <!-- Trusted Servers (x=1220, w=370, cx=1405) -->
+    <g class="gw-group">
+        <rect x="1220" y="28" width="370" height="264" rx="16" fill="rgba(0,168,160,0.07)" stroke="rgba(0,168,160,0.3)" stroke-width="2"/>
+        <text x="1405" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="700" fill="#00A8A0">
+            <tspan class="lang-en">MCP SERVERS</tspan>
+            <tspan class="lang-de">MCP-SERVER</tspan>
+        </text>
+        <text x="1405" y="128" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
+            <tspan class="lang-en">✔ verify gateway token</tspan>
+            <tspan class="lang-de">✔ Gateway-Token prüfen</tspan>
+        </text>
+        <text x="1405" y="174" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
+            <tspan class="lang-en">✔ authorize via</tspan>
+            <tspan class="lang-de">✔ autorisieren via</tspan>
+        </text>
+        <text x="1405" y="214" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">X-Identity-Header</text>
+        <text x="1405" y="258" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#666688">
+            <tspan class="lang-en">(if user context needed)</tspan>
+            <tspan class="lang-de">(bei Nutzerkontextbedarf)</tspan>
+        </text>
+    </g>
+</svg>
+
+            <div id="gw-caveats" style="max-width:1100px; width:100%; margin-top:28px; opacity:0; transform:translateY(18px)">
+                <div class="info-card" style="border-color:rgba(255,68,102,0.25)">
+                    <h3 style="color:var(--magenta)">
+                        <span class="lang-en">Problems with this approach</span>
+                        <span class="lang-de">Probleme dieses Ansatzes</span>
+                    </h3>
+                    <ul style="text-align:left; font-size:1.3rem; color:var(--text-muted); line-height:1.6; margin:0; padding-left:1.4em;">
+                        <li><span class="lang-en">Client Credentials flow is not yet part of the MCP spec.</span><span class="lang-de">Der Client-Credentials-Flow ist noch nicht Teil der MCP-Spec.</span></li>
+                        <li style="margin-top:0.5em"><span class="lang-en">MCP servers must be adapted to validate the gateway token and evaluate the X-Identity-Header.</span><span class="lang-de">MCP-Server müssen angepasst werden, um Gateway-Token und X-Identity-Header auszuwerten.</span></li>
+                        <li style="margin-top:0.5em"><span class="lang-en">For downstream services, the MCP server may need to perform a token exchange.</span><span class="lang-de">Für Downstream-Dienste muss der MCP-Server ggf. einen Tokentausch durchführen.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 16 — IDE AUTH PROBLEM
     ═══════════════════════════════════════════ -->
     <section class="section" id="slide-ide-auth">
         <div class="section-bg">
@@ -880,66 +1006,58 @@
     <!-- Arrow 1  (262 → 430, label centre=346) -->
     <g class="h2m-group">
         <line x1="262" y1="170" x2="430" y2="170" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
-        <text x="346" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">SSO</text>
+        <text x="346" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#8888a2">MCP-Auth</text>
     </g>
     <!-- h2m Service  (x=432, w=280, right=712, centre=572) -->
     <g class="h2m-group">
-        <rect x="432" y="20" width="280" height="300" rx="16" fill="rgba(226,0,116,0.1)" stroke="rgba(226,0,116,0.5)" stroke-width="2.5"/>
-        <text x="572" y="72" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="700" fill="#E20074">h2m</text>
-        <text x="572" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">
+        <rect x="432" y="20" width="280" height="260" rx="16" fill="rgba(226,0,116,0.1)" stroke="rgba(226,0,116,0.5)" stroke-width="2.5"/>
+        <text x="572" y="72" text-anchor="middle" font-family="Inter,sans-serif" font-size="38" font-weight="700" fill="#E20074">h2m</text>
+        <text x="572" y="122" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">
             <tspan class="lang-en">human identity</tspan>
             <tspan class="lang-de">menschl. Identität</tspan>
         </text>
-        <text x="572" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">↓</text>
-        <text x="572" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#a0a0b8">
-            <tspan class="lang-en">m2m access token</tspan>
-            <tspan class="lang-de">m2m-Zugriffstoken</tspan>
-        </text>
-        <text x="572" y="228" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#a0a0b8">X-Identity-Header</text>
-        <text x="572" y="278" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" fill="#666688" font-style="italic">optional</text>
+        <text x="572" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">↓</text>
+        <text x="572" y="210" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">X-Identity-Header</text>
     </g>
     <!-- Arrow 2  (714 → 932, gap=218, label centre=823) -->
     <g class="h2m-group">
         <line x1="714" y1="170" x2="932" y2="170" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
-        <text x="823" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">
+        <text x="823" y="114" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#8888a2">
             <tspan class="lang-en">m2m token</tspan>
             <tspan class="lang-de">m2m-Token</tspan>
         </text>
-        <text x="823" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">X-Identity-Header</text>
+        <text x="823" y="144" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#8888a2">X-Identity-Header</text>
     </g>
     <!-- Security Proxy  (x=934, w=420, right=1354, centre=1144) -->
     <g class="h2m-group">
         <rect x="934" y="24" width="420" height="292" rx="16" fill="rgba(226,0,116,0.07)" stroke="rgba(226,0,116,0.45)" stroke-width="2.5"/>
-        <text x="1144" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="700" fill="#E20074">
-            <tspan class="lang-en">SECURITY PROXY</tspan>
-            <tspan class="lang-de">SICHERHEITS-PROXY</tspan>
-        </text>
-        <text x="1144" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🔍 <tspan class="lang-en">audit</tspan><tspan class="lang-de">prüfen</tspan></text>
-        <text x="1144" y="186" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">🧹 <tspan class="lang-en">sanitize</tspan><tspan class="lang-de">bereinigen</tspan></text>
-        <text x="1144" y="232" text-anchor="middle" font-family="Inter,sans-serif" font-size="26" fill="#a0a0b8">📋 <tspan class="lang-en">log</tspan><tspan class="lang-de">protokollieren</tspan></text>
+        <text x="1144" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="38" font-weight="700" fill="#E20074">MCP GATEWAY</text>
+        <text x="1144" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">🔍 <tspan class="lang-en">audit</tspan><tspan class="lang-de">prüfen</tspan></text>
+        <text x="1144" y="186" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">🧹 <tspan class="lang-en">sanitize</tspan><tspan class="lang-de">bereinigen</tspan></text>
+        <text x="1144" y="232" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">📋 <tspan class="lang-en">log</tspan><tspan class="lang-de">protokollieren</tspan></text>
     </g>
     <!-- Arrow 3  (1356 → 1574, gap=218, label centre=1465) -->
     <g class="h2m-group">
         <line x1="1356" y1="170" x2="1574" y2="170" stroke="rgba(226,0,116,0.7)" stroke-width="3" marker-end="url(#h2m-arr)"/>
-        <text x="1465" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">
+        <text x="1465" y="114" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#8888a2">
             <tspan class="lang-en">gateway token</tspan>
             <tspan class="lang-de">Gateway-Token</tspan>
         </text>
-        <text x="1465" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#8888a2">X-Identity-Header</text>
+        <text x="1465" y="144" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="#8888a2">X-Identity-Header</text>
     </g>
     <!-- Trusted Servers  (x=1576, w=450, right=2026, centre=1801) -->
     <g class="h2m-group">
         <rect x="1576" y="44" width="450" height="252" rx="16" fill="rgba(0,168,160,0.07)" stroke="rgba(0,168,160,0.3)" stroke-width="2"/>
-        <text x="1801" y="100" text-anchor="middle" font-family="Inter,sans-serif" font-size="36" font-weight="700" fill="#00A8A0">
-            <tspan class="lang-en">TRUSTED SERVERS</tspan>
-            <tspan class="lang-de">VERTRAUENS-SERVER</tspan>
+        <text x="1801" y="100" text-anchor="middle" font-family="Inter,sans-serif" font-size="38" font-weight="700" fill="#00A8A0">
+            <tspan class="lang-en">MCP SERVERS</tspan>
+            <tspan class="lang-de">MCP-SERVER</tspan>
         </text>
-        <text x="1801" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">✅ HR</text>
-        <text x="1801" y="194" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">
+        <text x="1801" y="152" text-anchor="middle" font-family="Inter,sans-serif" font-size="30" fill="#a0a0b8">✅ HR</text>
+        <text x="1801" y="196" text-anchor="middle" font-family="Inter,sans-serif" font-size="30" fill="#a0a0b8">
             <tspan class="lang-en">✅ Calendar</tspan>
             <tspan class="lang-de">✅ Kalender</tspan>
         </text>
-        <text x="1801" y="238" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#a0a0b8">
+        <text x="1801" y="240" text-anchor="middle" font-family="Inter,sans-serif" font-size="30" fill="#a0a0b8">
             <tspan class="lang-en">✅ Documents</tspan>
             <tspan class="lang-de">✅ Dokumente</tspan>
         </text>
@@ -1037,8 +1155,8 @@
                         <span class="lang-de">MCP Server Cards (SEP-2127)</span>
                     </h3>
                     <p>
-                        <span class="lang-en">Signed manifests prevent <strong>rug pulls</strong> — servers can no longer silently swap their tool list after being trusted.</span>
-                        <span class="lang-de">Signierte Manifeste verhindern <strong>Rug Pulls</strong> — Server können ihre Tool-Liste nach Vertrauensvergabe nicht mehr heimlich austauschen.</span>
+                        <span class="lang-en">Signed manifests aim to <strong>reduce rug pulls</strong> — once adopted and enforced by clients, servers can no longer silently swap their tool list.</span>
+                        <span class="lang-de">Signierte Manifeste sollen <strong>Rug Pulls eindämmen</strong> — sobald sie verabschiedet und von Clients durchgesetzt werden, können Server ihre Tool-Liste nicht mehr heimlich austauschen.</span>
                     </p>
                 </div>
             </div>
@@ -1058,6 +1176,20 @@
             </div>
 
             <div class="spec-card anim-fade-up" data-delay="0.42">
+                <div class="spec-card-icon">🔑</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">OAuth Client Credentials Flow (SEP-1046)</span>
+                        <span class="lang-de">OAuth Client Credentials Flow (SEP-1046)</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Adds M2M authentication support to the MCP spec — enabling agents and gateways to authenticate without user interaction via OAuth 2.1 Client Credentials.</span>
+                        <span class="lang-de">Fügt M2M-Authentifizierung zur MCP-Spec hinzu — ermöglicht Agents und Gateways die Authentifizierung ohne Nutzerinteraktion via OAuth 2.1 Client Credentials.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="spec-card anim-fade-up" data-delay="0.54">
                 <div class="spec-card-icon">🏢</div>
                 <div>
                     <h3>
@@ -1090,49 +1222,73 @@
                 <span class="lang-de">Was noch fehlt</span>
             </h2>
 
-            <div class="feature-split anim-fade-up" data-delay="0.18">
-                <div class="feature-col feature-col-missing">
+            <div class="spec-card spec-card-missing anim-fade-up" data-delay="0.18">
+                <div class="spec-card-icon">🏷️</div>
+                <div>
                     <h3>
-                        <span class="lang-en">In the Protocol</span>
-                        <span class="lang-de">Im Protokoll</span>
+                        <span class="lang-en">No tool-description sanitization</span>
+                        <span class="lang-de">Keine Sanitization von Tool-Beschreibungen</span>
                     </h3>
-                    <div class="feature-item">
-                        <span class="feature-item-icon fi-missing">—</span>
-                        <span class="lang-en">No tool namespace standard</span>
-                        <span class="lang-de">Kein Tool-Namespace-Standard</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-item-icon fi-missing">—</span>
-                        <span class="lang-en">No output sanitization specification</span>
-                        <span class="lang-de">Keine Output-Sanitization-Spezifikation</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-item-icon fi-missing">—</span>
+                    <p>
+                        <span class="lang-en">Descriptions are passed to the LLM verbatim — hidden instructions or zero-width Unicode go through undetected.</span>
+                        <span class="lang-de">Beschreibungen landen unverändert im LLM — versteckte Anweisungen oder Zero-Width-Unicode bleiben unentdeckt.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="spec-card spec-card-missing anim-fade-up" data-delay="0.28">
+                <div class="spec-card-icon">🧼</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">No tool-output sanitization standard</span>
+                        <span class="lang-de">Kein Standard für Tool-Output-Sanitization</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Tool results flow directly into the context window — prompt injections ride along unchecked.</span>
+                        <span class="lang-de">Tool-Ergebnisse landen direkt im Kontextfenster — Prompt Injections reisen ungeprüft mit.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="spec-card spec-card-missing anim-fade-up" data-delay="0.38">
+                <div class="spec-card-icon">🏷️</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">No tool namespacing</span>
+                        <span class="lang-de">Kein Tool-Namespacing</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">Names collide across servers — a rogue server can silently shadow tools of a trusted one.</span>
+                        <span class="lang-de">Namen kollidieren zwischen Servern — ein bösartiger Server kann Tools eines vertrauenswürdigen verdecken.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="spec-card spec-card-missing anim-fade-up" data-delay="0.48">
+                <div class="spec-card-icon">🧱</div>
+                <div>
+                    <h3>
                         <span class="lang-en">No cross-server isolation</span>
                         <span class="lang-de">Keine serverübergreifende Isolation</span>
-                    </div>
-                </div>
-
-                <div class="feature-col feature-col-missing">
-                    <h3>
-                        <span class="lang-en">For Client Auth</span>
-                        <span class="lang-de">Für Client-Auth</span>
                     </h3>
-                    <div class="feature-item">
-                        <span class="feature-item-icon fi-missing">—</span>
-                        <span class="lang-en">Dynamic Client Registration: deprecated</span>
-                        <span class="lang-de">Dynamic Client Registration: deprecated</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-item-icon fi-missing">—</span>
-                        <span class="lang-en">Client ID Metadata Documents: still IETF draft</span>
-                        <span class="lang-de">Client ID Metadata Documents: noch IETF-Entwurf</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-item-icon fi-missing">—</span>
-                        <span class="lang-en">Each coding assistant: different auth flow</span>
-                        <span class="lang-de">Jeder Coding-Assistent: eigener Auth-Flow</span>
-                    </div>
+                    <p>
+                        <span class="lang-en">One server's response can trigger tools of another — perfect vehicle for exfiltration chains.</span>
+                        <span class="lang-de">Die Antwort eines Servers kann Tools anderer Server auslösen — ideales Vehikel für Exfiltrations-Ketten.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="spec-card spec-card-missing anim-fade-up" data-delay="0.58">
+                <div class="spec-card-icon">🔏</div>
+                <div>
+                    <h3>
+                        <span class="lang-en">No signed / pinned server identity</span>
+                        <span class="lang-de">Keine signierten, pinbaren Server-Identitäten</span>
+                    </h3>
+                    <p>
+                        <span class="lang-en">SEP-2127 is still a proposal — pinning and enforcement remain the client's problem, so rug pulls stay possible.</span>
+                        <span class="lang-de">SEP-2127 ist noch Vorschlag — Pinning und Durchsetzung bleiben Client-Sache, Rug Pulls bleiben möglich.</span>
+                    </p>
                 </div>
             </div>
         </div>
