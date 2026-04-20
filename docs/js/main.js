@@ -33,7 +33,6 @@ const slidesMeta = [
     { id: 'slide-prompt-context', en: 'Prompt Context',     de: 'Prompt-Kontext' },
     { id: 'slide-demo',           en: 'Live Demo',          de: 'Live-Demo' },
     { id: 'slide-mitigations',    en: 'Defenses',           de: 'Abwehr' },
-    { id: 'slide-checklist',      en: 'Checklist',          de: 'Checkliste' },
     { id: 'slide-safe-arch',      en: 'Safe Architecture',  de: 'Sichere Architektur' },
     { id: 'slide-gateway-auth',   en: 'Gateway Auth',       de: 'Gateway-Auth' },
     { id: 'slide-ide-auth',       en: 'IDE Auth Problem',   de: 'IDE-Auth-Problem' },
@@ -219,25 +218,19 @@ function resetPromptContext() {
 }
 watchSection('slide-prompt-context', playPromptContext, resetPromptContext);
 
-// --- Slide 12: Defense Principle Cards ---
+// --- Slide 10: Defense Principle Cards ---
 watchSection('slide-mitigations',
     () => gsap.fromTo('#slide-mitigations .principle-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.18, ease: 'power3.out' }),
     () => gsap.set('#slide-mitigations .principle-card', { opacity: 0, y: 30 })
 );
 
-// --- Slide 13: Checklist Items ---
-watchSection('slide-checklist',
-    () => gsap.fromTo('#slide-checklist .checklist-item', { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.07, ease: 'power2.out' }),
-    () => gsap.set('#slide-checklist .checklist-item', { opacity: 0, x: -16 })
-);
-
-// --- Slide 14: Safe Architecture Groups ---
+// --- Slide 11: Safe Architecture Groups ---
 watchSection('slide-safe-arch',
     () => gsap.fromTo('#slide-safe-arch .arch-group', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.18, ease: 'power2.out' }),
     () => gsap.set('#slide-safe-arch .arch-group', { opacity: 0, y: 20 })
 );
 
-// --- Slide 15: Gateway Auth Groups + caveat sub-step ---
+// --- Slide 12: Gateway Auth Groups + caveat sub-step ---
 let _gwCaveatShown = false;
 
 function _showGwCaveat() {
@@ -256,27 +249,27 @@ watchSection('slide-gateway-auth',
     () => { gsap.set('#slide-gateway-auth .gw-group', { opacity: 0, y: 20 }); _hideGwCaveat(); }
 );
 
-// --- Slide 17: h2m Architecture Groups ---
+// --- Slide 14: h2m Architecture Groups ---
 watchSection('slide-h2m-service',
     () => gsap.fromTo('#slide-h2m-service .h2m-group', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.2, ease: 'power2.out' }),
     () => gsap.set('#slide-h2m-service .h2m-group', { opacity: 0, y: 20 })
 );
 
-// --- Slide 17: Further Challenges ---
+// --- Slide 15: Further Challenges ---
 watchSection('slide-further-challenges',
     () => gsap.fromTo('#slide-further-challenges .info-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: 'power3.out' }),
     () => gsap.set('#slide-further-challenges .info-card', { opacity: 0, y: 30 })
 );
 
-// --- Slide 18: Spec Cards ---
+// --- Slide 16: Spec Cards ---
 watchSection('slide-spec-added',
     () => gsap.fromTo('#slide-spec-added .spec-card', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.2, ease: 'power3.out' }),
     () => gsap.set('#slide-spec-added .spec-card', { opacity: 0, y: 24 })
 );
 
-// --- Slide 18: gap cards use generic anim-fade-up (per-card data-delay) ---
+// --- Slide 17: gap cards use generic anim-fade-up (per-card data-delay) ---
 
-// --- Slide 19: Takeaway Cards ---
+// --- Slide 18: Takeaway Cards ---
 watchSection('slide-takeaways',
     () => gsap.fromTo('#slide-takeaways .takeaway-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.2, ease: 'power3.out' }),
     () => gsap.set('#slide-takeaways .takeaway-card', { opacity: 0, y: 30 })

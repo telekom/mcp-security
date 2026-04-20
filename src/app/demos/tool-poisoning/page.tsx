@@ -24,7 +24,6 @@ export default function ToolPoisoningPage() {
         "Treat tool descriptions as untrusted data, never as instructions",
         "Require sign-off on the raw tool manifest before connecting any server",
         "Scan tool metadata for non-printable and zero-width Unicode characters",
-        "Sandbox descriptions — they should describe the tool's purpose, not direct agent behaviour",
       ]}
       suggestedPrompts={[
         'How many vacation days do I have left?',
