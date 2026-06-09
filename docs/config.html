@@ -148,7 +148,16 @@
 <body>
     <div class="card">
         <h1>Slides Configuration</h1>
-        <p class="subtitle">Set conference details for the title slide. Stored locally in your browser.</p>
+        <p class="subtitle">Customize the title slide. Stored locally in your browser. Leave a field blank to use its default.</p>
+
+        <label for="title">Title</label>
+        <input type="text" id="title" placeholder="e.g. MCP Security">
+
+        <label for="subtitle-en">Subtitle (English)</label>
+        <input type="text" id="subtitle-en" placeholder="e.g. Deploying Model Context Protocol Safely in the Enterprise">
+
+        <label for="subtitle-de">Subtitle (Deutsch)</label>
+        <input type="text" id="subtitle-de" placeholder="e.g. Model Context Protocol sicher im Unternehmen einsetzen">
 
         <label for="conf-name">Conference Name</label>
         <input type="text" id="conf-name" placeholder="e.g. JavaLand 2025">
@@ -171,37 +180,42 @@
 
     <script>
         const KEYS = {
-            name:     'mcp_conf_name',
-            location: 'mcp_conf_location',
-            date:     'mcp_conf_date',
+            title:      'mcp_title',
+            subtitleEn: 'mcp_subtitle_en',
+            subtitleDe: 'mcp_subtitle_de',
+            name:       'mcp_conf_name',
+            location:   'mcp_conf_location',
+            date:       'mcp_conf_date',
+        };
+
+        // Map each input element id to its localStorage key
+        const FIELDS = {
+            'title':       KEYS.title,
+            'subtitle-en': KEYS.subtitleEn,
+            'subtitle-de': KEYS.subtitleDe,
+            'conf-name':   KEYS.name,
+            'conf-location': KEYS.location,
+            'conf-date':   KEYS.date,
         };
 
         // Load existing values on page open
-        document.getElementById('conf-name').value     = localStorage.getItem(KEYS.name)     || '';
-        document.getElementById('conf-location').value = localStorage.getItem(KEYS.location) || '';
-        document.getElementById('conf-date').value     = localStorage.getItem(KEYS.date)     || '';
+        Object.entries(FIELDS).forEach(([id, key]) => {
+            document.getElementById(id).value = localStorage.getItem(key) || '';
+        });
 
         function save() {
-            const name = document.getElementById('conf-name').value.trim();
-            const loc  = document.getElementById('conf-location').value.trim();
-            const date = document.getElementById('conf-date').value.trim();
-
-            if (name)     localStorage.setItem(KEYS.name, name);
-            else          localStorage.removeItem(KEYS.name);
-            if (loc)      localStorage.setItem(KEYS.location, loc);
-            else          localStorage.removeItem(KEYS.location);
-            if (date)     localStorage.setItem(KEYS.date, date);
-            else          localStorage.removeItem(KEYS.date);
-
+            Object.entries(FIELDS).forEach(([id, key]) => {
+                const val = document.getElementById(id).value.trim();
+                if (val) localStorage.setItem(key, val);
+                else     localStorage.removeItem(key);
+            });
             showStatus('saved', '✓ Saved — reload the slides to see the changes.');
         }
 
         function clear() {
             Object.values(KEYS).forEach(k => localStorage.removeItem(k));
-            document.getElementById('conf-name').value     = '';
-            document.getElementById('conf-location').value = '';
-            document.getElementById('conf-date').value     = '';
-            showStatus('cleared', '✕ Cleared — title slide will show the default label.');
+            Object.keys(FIELDS).forEach(id => { document.getElementById(id).value = ''; });
+            showStatus('cleared', '✕ Cleared — title slide will show the defaults.');
         }
 
         function showStatus(type, msg) {

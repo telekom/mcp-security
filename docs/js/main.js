@@ -6,16 +6,36 @@
 // Presenter badge is handled by playSectionAnimations / resetSectionAnimations
 // via the anim-fade-up class — no separate setup needed.
 
-// --- Conference info from localStorage (set via config.html) ---
+// --- Title slide overrides from localStorage (set via config.html) ---
 (function () {
+    // Title & subtitle
+    const title = localStorage.getItem('mcp_title');
+    if (title) {
+        const el = document.querySelector('#slide-title .hero-title .text-gradient');
+        if (el) el.textContent = title;
+        document.title = title;
+    }
+    const subEn = localStorage.getItem('mcp_subtitle_en');
+    if (subEn) {
+        const el = document.querySelector('#slide-title .hero-subtitle .lang-en');
+        if (el) el.textContent = subEn;
+    }
+    const subDe = localStorage.getItem('mcp_subtitle_de');
+    if (subDe) {
+        const el = document.querySelector('#slide-title .hero-subtitle .lang-de');
+        if (el) el.textContent = subDe;
+    }
+
+    // Conference info
     const conf = localStorage.getItem('mcp_conf_name');
     const loc  = localStorage.getItem('mcp_conf_location');
     const date = localStorage.getItem('mcp_conf_date');
     const label = document.getElementById('conf-label');
-    if (!label) return;
-    const parts = [conf, loc, date].filter(Boolean);
-    if (parts.length > 0) {
-        label.textContent = parts.join(' · ');
+    if (label) {
+        const parts = [conf, loc, date].filter(Boolean);
+        if (parts.length > 0) {
+            label.textContent = parts.join(' · ');
+        }
     }
 })();
 
